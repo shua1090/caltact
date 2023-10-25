@@ -29,8 +29,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
     const session = await managers.userDBManager.login(payload.given_name || '', payload.family_name || '', payload.email as string);
-    console.log(session);
-    return res.status(200).json(payload);
+    return res.status(200).json({
+      session,
+      firstName: payload.given_name,
+      lastName: payload.family_name,
+      email: payload.email,
+    });
 
   } catch (error) {
     return res.status(401).json({ message: 'Authentication failed', error: (error as any).message });
