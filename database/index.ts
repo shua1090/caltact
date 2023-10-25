@@ -30,6 +30,30 @@ class UserDBManager {
     this.db = db;
   }
 
+  async addContacts(id: String, contactID: String){
+    const usersCol = collection(this.db, 'contacts');
+    const q = (await getDocs(query(usersCol, where('id', '==', id)))).docs;
+    console.log(q.map((docs) => docs.data()));
+    if (!q.length){
+      // User doesn't have any contacts, add now
+      console.log("No contacts");
+    } else {
+      console.log("Adding");
+      await setDoc(doc(this.db, "contacts", q[0].id), { 
+        "phone": "shynn",
+        "test": "test"
+      });
+      console.log("added");
+    }
+  }
+
+  async getContacts(id: String) {
+    const usersCol = collection(this.db, 'contacts');
+    const q = query(usersCol, where("id", "==", id));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc)=>doc.data());
+  }
+
   async getUsers() {
     const usersCol = collection(this.db, "users");
     const userSnapshot = await getDocs(usersCol);
