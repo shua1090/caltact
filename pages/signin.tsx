@@ -7,7 +7,7 @@ config();
 
 export default function Signin() {
   const [isClient, setIsClient] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -17,7 +17,7 @@ export default function Signin() {
   }
 
   function handleLogin(credentialResponse: any) {
-    console.log(credentialResponse);
+    setIsLoading(true);
     // make a request to api/auth
     // Authorization: Bearer YOUR_GOOGLE_TOKEN
     fetch("/api/auth", {
@@ -28,7 +28,11 @@ export default function Signin() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(credentialResponse);
+        console.log(data)
+        setIsLoading(false)
+        if (!data.session) {
+          return;
+        }
         // Record data to local storage
         localStorage.setItem("token", data.session);
         localStorage.setItem("firstName", data.firstName);
@@ -37,6 +41,18 @@ export default function Signin() {
         window.location.reload();
       });
   }
+
+  if (isLoading) return (
+    <main className="min-h-screen bg-white">
+      <Header />
+      <div className="w-full flex flex-col items-center justify-center">
+        <p className="text-center text-xl font-light mt-10">
+          Loading...
+        </p>
+      </div>
+    </main>
+  )
+
   return (
     <main className="min-h-screen bg-white">
       <Header />
@@ -54,12 +70,12 @@ export default function Signin() {
           </GoogleOAuthProvider>
         </div>
       ) : (
-        <div className="w-full flex flex-col items-center justify-center">
-          <p className="text-center text-xl font-light mt-10">
+        <div className="w-full flex flex-col items-center justify-center text-black">
+          <p className="text-center text-xl font-light mt-10 text-black">
             Currently logged in as {localStorage.getItem("email")}{" "}
           </p>
           <button
-            className="w-40 mx-auto font-light py-2 px-4 rounded mt-10 border border-black"
+            className="w-40 mx-auto font-light py-2 px-4 rounded mt-10 border border-black text-black"
             onClick={() => {
               localStorage.clear();
               window.location.reload();

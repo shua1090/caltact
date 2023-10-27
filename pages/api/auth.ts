@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     const payload = ticket.getPayload();
-
+    console.log(payload)
     if (!payload || !payload.email_verified || !payload.email) {
       return res.status(401).json({ message: 'Invalid token' });
     }
