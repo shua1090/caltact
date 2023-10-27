@@ -9,6 +9,7 @@ import {
   doc,
   setDoc,
   getFirestore,
+  documentId,
 } from "firebase/firestore/lite";
 
 const firebaseConfig = {
@@ -28,6 +29,34 @@ class UserDBManager {
   private db: Firestore;
   constructor(db: Firestore) {
     this.db = db;
+  }
+
+  async addContactToID(id: String, contactID: String){
+    const usersCol = collection(this.db, 'users');
+    const q = query(usersCol, where(documentId(), "==", id));
+    const userDoc = (await getDocs(q)).docs;
+    const userData = userDoc.map((doc: { data: () => any; })=>doc.data())[0];
+    if (userDoc == undefined){
+      console.log("Undefined :( [User doesn't exist]");
+      return false;
+    }
+    let contacts = [];
+    console.log(userDoc[0].id);
+    if (userData["contacts"] == undefined){
+      contacts = [contactID];
+    } else {
+      userData["contacts"].push(contactID);
+      contacts = userData["contacts"];
+    }
+    await setDoc(doc(this.db, "users", userDoc[0].id), { 
+      "email" : userData["email"],
+      "firstName": userData["firstName"],
+      "lastName": userData["lastName"],
+      "session": userData["session"],
+      "contacts": contacts,
+    });
+    console.log(`Updated with ${contacts}`);
+    return true;
   }
 
   async addContacts(id: String, contactID: String){
