@@ -47,6 +47,21 @@ class UserDBManager {
     }
   }
 
+  async getContactByPhone(field: string, value: BigInt){
+    const usersCol = collection(this.db, 'contacts');
+    const q = (await getDocs(query(usersCol, where(field, '==', value)))).docs;
+    if (!q.length) {
+      console.log(`No matching contacts with ${field} == ${value}`);
+      return null;
+    } else {
+      console.log("Found some values");
+      q.map((doc)=>doc.data());
+    }
+
+    
+
+  }
+
   async getContacts(id: String) {
     const usersCol = collection(this.db, 'contacts');
     const q = query(usersCol, where("id", "==", id));
