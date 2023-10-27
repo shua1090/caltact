@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { OAuth2Client } from 'google-auth-library';
-import managers from '../../database';
+import { userDBManager } from '../../database';
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 const client = new OAuth2Client(CLIENT_ID);
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
 
-    const session = await managers.userDBManager.login(payload.given_name || '', payload.family_name || '', payload.email as string);
+    const session = await userDBManager.login(payload.given_name || '', payload.family_name || '', payload.email as string);
     return res.status(200).json({
       session,
       firstName: payload.given_name,
