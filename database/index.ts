@@ -10,6 +10,7 @@ import {
   setDoc,
   getFirestore,
 } from "firebase/firestore/lite";
+import { User } from "@/pages/api/types/user";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -37,11 +38,16 @@ class UserDBManager {
     return users;
   }
 
-  async getUserByEmail(email: string) {
+  async getUserByEmail(email: string): Promise<User | null> {
     const usersCol = collection(this.db, "users");
     const q = query(usersCol, where("email", "==", email));
     const snapshot = await getDocs(q);
-    return snapshot.docs[0];
+    const doc = snapshot.docs[0];
+    if (!doc) {
+      return null;
+    }
+    const data = doc.data();
+    return { ...data, id: doc.id } as User;
   }
 
   generateUUID(): string {
@@ -81,6 +87,4 @@ class UserDBManager {
   }
 }
 
-const userDBManager = new UserDBManager(db);
-const exports = { userDBManager };
-export default exports;
+export const userDBManager = new UserDBManager(db);

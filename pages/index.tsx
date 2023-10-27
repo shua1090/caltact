@@ -5,7 +5,7 @@ export default function Index() {
   return (
     <main className="min-h-screen bg-white">
       <Header />
-      Contact Page
+      Home Page
     </main>
   )
 }
