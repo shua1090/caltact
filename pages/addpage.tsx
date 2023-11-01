@@ -5,6 +5,7 @@ import TextEntry from "@/components/textentry";
 import pfp  from '../public/pfp.png';
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function postContact(contact: Object){
     const promise = fetch("http://localhost:3000/api/contacts", {
@@ -41,9 +42,13 @@ export default function AddPage(){
             github: ""
         }
     });
+    
+    const router = useRouter();
 
-    function handleSubmit(){
+    function handleSubmit(event: FormEvent){
         /* handle form submission */
+        event.preventDefault();
+
         postContact(contact)
         .then((res : Response) => {
             if(res.status === 201){
@@ -53,9 +58,15 @@ export default function AddPage(){
                 return undefined;
             }
         })
-        .then(() => {
+        .then((res) => {
             // redirect to user home page
-        
+            if(res !== undefined){
+                alert("Contact added successfully!");
+            }
+            else{
+                alert("Contact could not be added.");
+            }
+            router.push("/");
         })
         .catch((error : Error) => {
             console.log(error);
