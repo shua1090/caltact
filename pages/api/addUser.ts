@@ -7,15 +7,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'POST') {
     return res.status(405).end();
   }
+
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ message: 'Authorization token missing' });
+  }
+
   try {
-    console.log(req.body["message"]);
-    // console.log((await managers.userDBManager.getContacts("Gk7gRQI7s4ZJtTfmmWhTa")).);
-    await managers.contactDBManager.addContact("01y5hf7YqGZQfzqlgDXj", new Map<string, string>([
-      ["test", "testval"],
-      ["best", "bestval"]
-    ]));
-    // console.log(await managers.userDBManager.addContactToID("Gk7gRQI7s4ZJtTfmmWhT", req.body["message"]));
-    return res.status(404).json({message: "Failure"});
+    await managers.contactDBManager.addContact(req.body["userid"], {
+      email: req.body["email"],
+      name: req.body["name"],
+      phone: req.body["phone"],
+      instagram: req.body["instagram"],
+      discord: req.body["discord"],
+      spotify: req.body["spotify"],
+      snapchat: req.body["snapchat"],
+    });
+    return res.status(404).json({message: "Success"});
 
   } catch (error) {
     console.log(error);
