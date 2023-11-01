@@ -4,6 +4,18 @@ import Image from "next/image";
 import TextEntry from "@/components/textentry";
 import pfp  from '../public/pfp.png';
 import { FormEvent, useState } from "react";
+import Link from "next/link";
+
+function postContact(contact: Object){
+    const promise = fetch("http://localhost:3000/api/contacts", {
+        method: "POST",
+        headers:{
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(contact)
+    });
+    return promise;
+}
 
 export default function AddPage(){
     const [contact, setContact] = useState({
@@ -32,32 +44,29 @@ export default function AddPage(){
 
     function handleSubmit(){
         /* handle form submission */
-        // postContact()
-        // .then((res : Response) => {
-        //     if(res.status === 201){
-        //         return res.json();
-        //     }
-        //     else{
-        //         return undefined;
-        //     }
-        // })
-        // .catch((error : Error) => {
-        //     console.log(error);
-        // });
-        console.log(contact);
-        console.log("test");
-    }
-    
-    function handleCancel(){
-        /* handle form cancellation */
-        // redirect to user home page
+        postContact(contact)
+        .then((res : Response) => {
+            if(res.status === 201){
+                return res.json();
+            }
+            else{
+                return undefined;
+            }
+        })
+        .then(() => {
+            // redirect to user home page
+        
+        })
+        .catch((error : Error) => {
+            console.log(error);
+        });
     }
 
     function handleChange(event: FormEvent){
         const {name, value} = event.target as HTMLFormElement;
         switch(name){
             case "file-upload": {
-                setContact({...contact, photo: URL.createObjectURL(value.files[0])});
+                setContact({...contact, photo: value.files[0]});
                 console.log(contact.photo);
                 break;
             }
@@ -137,7 +146,7 @@ export default function AddPage(){
                         <div className="border-b border-gray-900/10 pb-12">
                             <h2 className = "text-base font-semibold leading-7 text-gray-900">Create New Contact</h2>
                             <p className = "mt-1 text-sm leading-6 text-gray-600">
-                                Fill out the information of the contact you would like to add below:
+                                Fill out the information of the contact you would like to add below.
                             </p>
 
                             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -325,6 +334,9 @@ export default function AddPage(){
 
                         <div className="border-b border-gray-900/10 pb-12">
                             <h2 className = "text-base font-semibold leading-7 text-gray-900">Social Media</h2>
+                            <p className = "mt-1 text-sm leading-6 text-gray-600">
+                                Fill out social media handles.
+                            </p>
                             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div className="sm:col-span-2">
                                     <TextEntry label="Facebook" id="facebook" value={contact.social.facebook} changeHandler={handleChange}/>
@@ -349,9 +361,11 @@ export default function AddPage(){
 
                         <div className="border-b border-gray-900/10 pb-12">
                             <div className="mt-6 flex items-center justify-end gap-x-6">
-                                <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
-                                    Cancel
-                                </button>   
+                                <Link href = "/">
+                                    <button className="text-sm font-semibold leading-6 text-gray-900">
+                                        Cancel
+                                    </button>  
+                                </Link> 
                                 <input 
                                     type = "submit"
                                     value="Submit"
