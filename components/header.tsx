@@ -6,6 +6,9 @@ export default function Header() {
       <Link href="/">
         <p className="text-lg font-light">Home</p>
       </Link>
+      <Link href = "/addpage">
+          <p className = "text-lg font-light">Add Contact</p>
+      </Link>
       <Link href="/signin">
         <p className="text-lg font-light">Signin</p>
       </Link>
