@@ -31,74 +31,7 @@ class UserDBManager {
   constructor(db: Firestore) {
     this.db = db;
   }
-
-  async addContactToID(id: String, contactID: String){
-    const usersCol = collection(this.db, 'users');
-    const q = query(usersCol, where(documentId(), "==", id));
-    const userDoc = (await getDocs(q)).docs;
-    const userData = userDoc.map((doc: { data: () => any; })=>doc.data())[0];
-    if (userDoc == undefined){
-      console.log("Undefined :( [User doesn't exist]");
-      return false;
-    }
-    let contacts = [];
-    console.log(userDoc[0].id);
-    if (userData["contacts"] == undefined){
-      contacts = [contactID];
-    } else {
-      userData["contacts"].push(contactID);
-      contacts = userData["contacts"];
-    }
-    await setDoc(doc(this.db, "users", userDoc[0].id), { 
-      "email" : userData["email"],
-      "firstName": userData["firstName"],
-      "lastName": userData["lastName"],
-      "session": userData["session"],
-      "contacts": contacts,
-    });
-    console.log(`Updated with ${contacts}`);
-    return true;
-  }
-
-  async addContacts(id: String, contactID: String){
-    const usersCol = collection(this.db, 'contacts');
-    const q = (await getDocs(query(usersCol, where('id', '==', id)))).docs;
-    console.log(q.map((docs) => docs.data()));
-    if (!q.length){
-      // User doesn't have any contacts, add now
-      console.log("No contacts");
-    } else {
-      console.log("Adding");
-      await setDoc(doc(this.db, "contacts", q[0].id), { 
-        "phone": "shynn",
-        "test": "test"
-      });
-      console.log("added");
-    }
-  }
-
-  async getContactByPhone(field: string, value: BigInt){
-    const usersCol = collection(this.db, 'contacts');
-    const q = (await getDocs(query(usersCol, where(field, '==', value)))).docs;
-    if (!q.length) {
-      console.log(`No matching contacts with ${field} == ${value}`);
-      return null;
-    } else {
-      console.log("Found some values");
-      q.map((doc)=>doc.data());
-    }
-
-    
-
-  }
-
-  async getContacts(id: String) {
-    const usersCol = collection(this.db, 'contacts');
-    const q = query(usersCol, where("id", "==", id));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map((doc)=>doc.data());
-  }
-
+  
   async getUsers() {
     const usersCol = collection(this.db, "users");
     const userSnapshot = await getDocs(usersCol);

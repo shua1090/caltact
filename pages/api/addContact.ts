@@ -8,13 +8,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).end();
   }
 
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ message: 'Authorization token missing' });
-  }
+  // const token = req.headers.authorization?.split(' ')[1];
+  // if (!token) {
+  //   return res.status(401).json({ message: 'Authorization token missing' });
+  // }
 
   try {
-    await managers.contactDBManager.addContact(req.body["userid"], {
+    let c =  {
       email: req.body["email"],
       name: req.body["name"],
       phone: req.body["phone"],
@@ -22,8 +22,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       discord: req.body["discord"],
       spotify: req.body["spotify"],
       snapchat: req.body["snapchat"],
-    });
-    return res.status(404).json({message: "Success"});
+    }
+    await managers.contactDBManager.addContact(req.body["userid"], c);
+    return res.status(404).json({message: managers.contactDBManager.getContacts(req.body["userid"])});
 
   } catch (error) {
     console.log(error);
