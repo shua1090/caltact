@@ -28,23 +28,19 @@ export default function AddPage(){
         email: "",
         phoneNumber: "",
         birthday: "",
-        address: {
-            country: "",
-            street: "",
-            city: "",
-            region: "",
-            postalCode: ""
-        },
-        social:{
-            facebook: "",
-            instagram: "",
-            snapchat: "",
-            twitter: "",
-            linkedin: "",
-            discord: "",
-            github: "",
-            spotify: ""
-        }
+        country: "",
+        street: "",
+        city: "",
+        region: "",
+        postalCode: "",
+        facebook: "",
+        instagram: "",
+        snapchat: "",
+        twitter: "",
+        linkedin: "",
+        discord: "",
+        github: "",
+        spotify: ""
     });
     
     const router = useRouter();
@@ -114,55 +110,55 @@ export default function AddPage(){
                 break;
             }
             case "country": {
-                setContact({...contact, address: {...contact.address, country: value}});
+                setContact({...contact, country: value});
                 break;
             }
             case "street-address": {
-                setContact({...contact, address: {...contact.address, street: value}});
+                setContact({...contact, street: value});
                 break;
             }
             case "city": {
-                setContact({...contact, address: {...contact.address, city: value}});
+                setContact({...contact, city: value});
                 break;
             }
             case "region": {
-                setContact({...contact, address: {...contact.address, region: value}});
+                setContact({...contact, region: value});
                 break;
             }
             case "postal-code": {
-                setContact({...contact, address: {...contact.address, postalCode: value}});
+                setContact({...contact, postalCode: value});
                 break;
             }
             case "facebook": {
-                setContact({...contact, social: {...contact.social, facebook: value}});
+                setContact({...contact, facebook: value});
                 break;
             }
             case "instagram": {
-                setContact({...contact, social: {...contact.social, instagram: value}});
+                setContact({...contact, instagram: value});
                 break;
             }
             case "snapchat": {
-                setContact({...contact, social: {...contact.social, snapchat: value}});
+                setContact({...contact, snapchat: value});
                 break;
             }
             case "twitter": {
-                setContact({...contact, social: {...contact.social, twitter: value}});
+                setContact({...contact, twitter: value});
                 break;
             }
             case "linkedin": {
-                setContact({...contact, social: {...contact.social, linkedin: value}});
+                setContact({...contact, linkedin: value});
                 break;
             }
             case "discord": {
-                setContact({...contact, social: {...contact.social, discord: value}});
+                setContact({...contact, discord: value});
                 break;
             }
             case "github": {
-                setContact({...contact, social: {...contact.social, github: value}});
+                setContact({...contact, github: value});
                 break;
             }
             case "spotify": {
-                setContact({...contact, social: {...contact.social, spotify: value}});
+                setContact({...contact, spotify: value});
                 break;
             }
         }
@@ -315,7 +311,7 @@ export default function AddPage(){
                                         <select
                                         id="country"
                                         name="country"
-                                        value={contact.address.country}
+                                        value={contact.country}
                                         onChange={handleChange}
                                         autoComplete="country-name"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
@@ -336,7 +332,7 @@ export default function AddPage(){
                                         type="text"
                                         name="street-address"
                                         id="street-address"
-                                        value={contact.address.street}
+                                        value={contact.street}
                                         onChange={handleChange}
                                         autoComplete="street-address"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -353,7 +349,7 @@ export default function AddPage(){
                                             type="text"
                                             name="city"
                                             id="city"
-                                            value={contact.address.city}
+                                            value={contact.city}
                                             onChange={handleChange}
                                             autoComplete="address-level2"
                                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -370,7 +366,7 @@ export default function AddPage(){
                                             type="text"
                                             name="region"
                                             id="region"
-                                            value={contact.address.region}
+                                            value={contact.region}
                                             onChange={handleChange}
                                             autoComplete="address-level1"
                                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -387,7 +383,7 @@ export default function AddPage(){
                                             type="text"
                                             name="postal-code"
                                             id="postal-code"
-                                            value={contact.address.postalCode}
+                                            value={contact.postalCode}
                                             onChange={handleChange}
                                             autoComplete="postal-code"
                                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -404,28 +400,28 @@ export default function AddPage(){
                             </p>
                             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div className="sm:col-span-2">
-                                    <TextEntry label="Facebook" id="facebook" value={contact.social.facebook} changeHandler={handleChange}/>
+                                    <TextEntry label="Facebook" id="facebook" value={contact.facebook} changeHandler={handleChange}/>
                                 </div>
                                 <div className="sm:col-span-2">
-                                    <TextEntry label="Instagram" id="instagram" value={contact.social.instagram} changeHandler={handleChange}/>
+                                    <TextEntry label="Instagram" id="instagram" value={contact.instagram} changeHandler={handleChange}/>
                                 </div>
                                 <div className="sm:col-span-2">
-                                    <TextEntry label="Snapchat" id="snapchat" value={contact.social.snapchat} changeHandler={handleChange}/>
+                                    <TextEntry label="Snapchat" id="snapchat" value={contact.snapchat} changeHandler={handleChange}/>
                                 </div>
                                 <div className="sm:col-span-2">
-                                    <TextEntry label="Twitter" id="twitter" value={contact.social.twitter}changeHandler={handleChange}/>
+                                    <TextEntry label="Twitter" id="twitter" value={contact.twitter}changeHandler={handleChange}/>
                                 </div>
                                 <div className="sm:col-span-2">
-                                    <TextEntry label="LinkedIn" id="linkedin" value={contact.social.linkedin} changeHandler={handleChange}/>
+                                    <TextEntry label="LinkedIn" id="linkedin" value={contact.linkedin} changeHandler={handleChange}/>
                                 </div>
                                 <div className="sm:col-span-2">
-                                    <TextEntry label="Discord" id="discord" value={contact.social.discord} changeHandler={handleChange}/>
+                                    <TextEntry label="Discord" id="discord" value={contact.discord} changeHandler={handleChange}/>
                                 </div>
                                 <div className="sm:col-span-2">
-                                    <TextEntry label="Github" id="github" value={contact.social.github} changeHandler={handleChange}/>
+                                    <TextEntry label="Github" id="github" value={contact.github} changeHandler={handleChange}/>
                                 </div>
                                 <div className="sm:col-span-2">
-                                    <TextEntry label="Spotify" id="spotify" value={contact.social.spotify} changeHandler={handleChange}/>
+                                    <TextEntry label="Spotify" id="spotify" value={contact.spotify} changeHandler={handleChange}/>
                                 </div>
                             </div>
                         </div>
