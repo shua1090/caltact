@@ -9,10 +9,11 @@ import {
   doc,
   setDoc,
   getFirestore,
+  documentId,
 } from "firebase/firestore/lite";
 import { User } from "@/pages/api/types/user";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -22,15 +23,15 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
-const db = getFirestore(app);
+export const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+export const db = getFirestore(app);
 
 class UserDBManager {
   private db: Firestore;
   constructor(db: Firestore) {
     this.db = db;
   }
-
+  
   async getUsers() {
     const usersCol = collection(this.db, "users");
     const userSnapshot = await getDocs(usersCol);
