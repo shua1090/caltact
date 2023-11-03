@@ -26,16 +26,17 @@ class ContactDBManager {
     this.db = db;
   }
 
-  
+  // Get contacts for an id
   async getContacts(id: String) {
     const usersCol = collection(this.db, 'contacts');
     const q = query(usersCol, where(documentId(), "==", id));
     const snapshot = await getDocs(q);
     const s = snapshot.docs.map((doc)=>doc.data());
+    console.log(s[0]["contacts"]);
     return s[0]["contacts"];
   }
 
-
+  // add a contact object to the user with the id
   async addContact(id: string, contact: Contact){
     const contactsCol = collection(this.db, 'contacts')
     const q = query(contactsCol, where(documentId(), "==", id));
