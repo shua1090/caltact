@@ -6,3 +6,5 @@ To see errors, install the ESLint plugin on VSCode
 To lint and run commands, run `npx eslint yourcommand`
 
 Additionally, for convenience, set up your default formatter to be ESlint
+
+To format, CTRL - SHIT - P -> ESLint: Fix all auto-fixable Problems
