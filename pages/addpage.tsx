@@ -1,170 +1,168 @@
-import "../app/globals.css";
-import Header from "@/components/header";
-import Image from "next/image";
-import TextEntry from "@/components/textentry";
-import pfp  from '../public/pfp.png';
-import { FormEvent, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import '../app/globals.css'
+import Header from '@/components/header'
+import Image from 'next/image'
+import TextEntry from '@/components/textentry'
+import pfp from '../public/pfp.png'
+import { type FormEvent, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
-function postContact(contact: Object){
-    const promise = fetch("http://localhost:3000/api/contacts", {
-        method: "POST",
-        headers:{
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(contact)
-    });
-    return promise;
+async function postContact (contact: Record<string, unknown>) {
+  const promise = fetch('http://localhost:3000/api/contacts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(contact)
+  })
+  return await promise
 }
 
-export default function AddPage(){
-    const [contact, setContact] = useState({
-        photo: "",
-        college: "",
-        major: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        phoneNumber: "",
-        birthday: "",
-        country: "",
-        street: "",
-        city: "",
-        region: "",
-        postalCode: "",
-        facebook: "",
-        instagram: "",
-        snapchat: "",
-        twitter: "",
-        linkedin: "",
-        discord: "",
-        github: "",
-        spotify: ""
-    });
-    
-    const router = useRouter();
+export default function AddPage () {
+  const [contact, setContact] = useState({
+    photo: '',
+    college: '',
+    major: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    birthday: '',
+    country: '',
+    street: '',
+    city: '',
+    region: '',
+    postalCode: '',
+    facebook: '',
+    instagram: '',
+    snapchat: '',
+    twitter: '',
+    linkedin: '',
+    discord: '',
+    github: '',
+    spotify: ''
+  })
 
-    function handleSubmit(event: FormEvent){
-        /* handle form submission */
-        event.preventDefault();
+  const router = useRouter()
 
-        postContact(contact)
-        .then((res : Response) => {
-            if(res.status === 201){
-                return res.json();
-            }
-            else{
-                return undefined;
-            }
-        })
-        .then((res) => {
-            // redirect to user home page
-            if(res !== undefined){
-                alert("Contact added successfully!");
-            }
-            else{
-                alert("Contact could not be added.");
-            }
-            router.push("/");
-        })
-        .catch((error : Error) => {
-            console.log(error);
-        });
-    }
+  function handleSubmit (event: FormEvent) {
+    /* handle form submission */
+    event.preventDefault()
 
-    function handleChange(event: FormEvent){
-        const {name, value} = event.target as HTMLFormElement;
-        switch(name){
-            case "file-upload": {
-                setContact({...contact, photo: value.files[0]});
-                console.log(contact.photo);
-                break;
-            }
-            case "college": {
-                setContact({...contact, college: value});
-                break;
-            }
-            case "major": {
-                setContact({...contact, major: value});
-                break;
-            }
-            case "first-name": {
-                setContact({...contact, firstName: value});
-                break;
-            }
-            case "last-name": {
-                setContact({...contact, lastName: value});
-                break;
-            }
-            case "email": {
-                setContact({...contact, email: value});
-                break;
-            }
-            case "phone-number": {
-                setContact({...contact, phoneNumber: value});
-                break;
-            }
-            case "birthday": {
-                setContact({...contact, birthday: value});
-                break;
-            }
-            case "country": {
-                setContact({...contact, country: value});
-                break;
-            }
-            case "street-address": {
-                setContact({...contact, street: value});
-                break;
-            }
-            case "city": {
-                setContact({...contact, city: value});
-                break;
-            }
-            case "region": {
-                setContact({...contact, region: value});
-                break;
-            }
-            case "postal-code": {
-                setContact({...contact, postalCode: value});
-                break;
-            }
-            case "facebook": {
-                setContact({...contact, facebook: value});
-                break;
-            }
-            case "instagram": {
-                setContact({...contact, instagram: value});
-                break;
-            }
-            case "snapchat": {
-                setContact({...contact, snapchat: value});
-                break;
-            }
-            case "twitter": {
-                setContact({...contact, twitter: value});
-                break;
-            }
-            case "linkedin": {
-                setContact({...contact, linkedin: value});
-                break;
-            }
-            case "discord": {
-                setContact({...contact, discord: value});
-                break;
-            }
-            case "github": {
-                setContact({...contact, github: value});
-                break;
-            }
-            case "spotify": {
-                setContact({...contact, spotify: value});
-                break;
-            }
+    postContact(contact)
+      .then(async (res: Response) => {
+        if (res.status === 201) {
+          return await res.json()
+        } else {
+          return undefined
         }
-    }
+      })
+      .then((res) => {
+        // redirect to user home page
+        if (res !== undefined) {
+          alert('Contact added successfully!')
+        } else {
+          alert('Contact could not be added.')
+        }
+        void router.push('/')
+      })
+      .catch((error: Error) => {
+        console.log(error)
+      })
+  }
 
-    return (
+  function handleChange (event: FormEvent) {
+    const { name, value } = event.target as HTMLFormElement
+    switch (name) {
+      case 'file-upload': {
+        setContact({ ...contact, photo: value.files[0] })
+        console.log(contact.photo)
+        break
+      }
+      case 'college': {
+        setContact({ ...contact, college: value })
+        break
+      }
+      case 'major': {
+        setContact({ ...contact, major: value })
+        break
+      }
+      case 'first-name': {
+        setContact({ ...contact, firstName: value })
+        break
+      }
+      case 'last-name': {
+        setContact({ ...contact, lastName: value })
+        break
+      }
+      case 'email': {
+        setContact({ ...contact, email: value })
+        break
+      }
+      case 'phone-number': {
+        setContact({ ...contact, phoneNumber: value })
+        break
+      }
+      case 'birthday': {
+        setContact({ ...contact, birthday: value })
+        break
+      }
+      case 'country': {
+        setContact({ ...contact, country: value })
+        break
+      }
+      case 'street-address': {
+        setContact({ ...contact, street: value })
+        break
+      }
+      case 'city': {
+        setContact({ ...contact, city: value })
+        break
+      }
+      case 'region': {
+        setContact({ ...contact, region: value })
+        break
+      }
+      case 'postal-code': {
+        setContact({ ...contact, postalCode: value })
+        break
+      }
+      case 'facebook': {
+        setContact({ ...contact, facebook: value })
+        break
+      }
+      case 'instagram': {
+        setContact({ ...contact, instagram: value })
+        break
+      }
+      case 'snapchat': {
+        setContact({ ...contact, snapchat: value })
+        break
+      }
+      case 'twitter': {
+        setContact({ ...contact, twitter: value })
+        break
+      }
+      case 'linkedin': {
+        setContact({ ...contact, linkedin: value })
+        break
+      }
+      case 'discord': {
+        setContact({ ...contact, discord: value })
+        break
+      }
+      case 'github': {
+        setContact({ ...contact, github: value })
+        break
+      }
+      case 'spotify': {
+        setContact({ ...contact, spotify: value })
+        break
+      }
+    }
+  }
+
+  return (
         <main className=" min-h-screen bg-white">
             <Header />
             <div className = "w-4/5 mx-auto" >
@@ -182,8 +180,8 @@ export default function AddPage(){
                                         Photo
                                     </div>
                                     <div className="mt-2 flex items-center gap-x-3">
-                                        <Image 
-                                            src={contact.photo ? contact.photo : pfp}
+                                        <Image
+                                            src={contact.photo ?? pfp}
                                             width= "50"
                                             height= "50"
                                             alt="upload profile picture preview"
@@ -431,9 +429,9 @@ export default function AddPage(){
                                 <Link href = "/">
                                     <button className="text-sm font-semibold leading-6 text-gray-900">
                                         Cancel
-                                    </button>  
-                                </Link> 
-                                <input 
+                                    </button>
+                                </Link>
+                                <input
                                     type = "submit"
                                     value="Submit"
                                     className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -445,5 +443,5 @@ export default function AddPage(){
                 </form>
             </div>
         </main>
-    );
+  )
 }
