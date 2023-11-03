@@ -3,7 +3,7 @@ import Header from "@/components/header";
 import Image from "next/image";
 import TextEntry from "@/components/textentry";
 import pfp from "../public/pfp.png";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
