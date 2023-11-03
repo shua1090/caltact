@@ -17,10 +17,10 @@ export default async function handler(
   }
 
   // // Olex's special authentication method
-  // const token = req.headers.authorization?.split(' ')[1];
-  // if (!token) {
-  //   return res.status(401).json({ message: 'Authorization token missing' });
-  // }
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ message: 'Authorization token missing' });
+  }
 
   // For each argument passed in, check through the profanity filter
   for (let prop in req.body){
