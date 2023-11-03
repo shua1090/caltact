@@ -42,12 +42,15 @@ class ContactDBManager {
     const q = query(contactsCol, where(documentId(), "==", id));
     const contactDoc = (await getDocs(q)).docs;
     const contactsData = contactDoc.map((doc: {data:()=>any}) => doc.data())[0];
+    // If there are no contacts for this user yet, create a new array
+    // with the new contact, and add it
     if (contactDoc == undefined || contactsData == undefined){
       console.log("Undefined contact, creating");
       await setDoc(doc(this.db, "contacts", id), {
         "contacts": [contact]
       });
     } else {
+      // Get the current contact array, add to it, and add it back in
       let c = contactsData["contacts"];
       c.push(contact);
       await setDoc(doc(this.db, "contacts", id), {
