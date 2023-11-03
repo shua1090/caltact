@@ -1,6 +1,6 @@
-import { getApps, initializeApp } from "firebase/app";
+import { getApps, initializeApp } from 'firebase/app'
 import {
-  Firestore,
+  type Firestore,
   collection,
   getDocs,
   query,
@@ -8,10 +8,9 @@ import {
   addDoc,
   doc,
   setDoc,
-  getFirestore,
-  documentId,
-} from "firebase/firestore/lite";
-import { User } from "@/pages/api/types/user";
+  getFirestore
+} from 'firebase/firestore/lite'
+import { type User } from '@/pages/api/types/user'
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -20,72 +19,73 @@ export const firebaseConfig = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-};
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+}
 
-export const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
-export const db = getFirestore(app);
+export const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0]
+export const db = getFirestore(app)
 
 class UserDBManager {
-  private db: Firestore;
-  constructor(db: Firestore) {
-    this.db = db;
-  }
-  
-  async getUsers() {
-    const usersCol = collection(this.db, "users");
-    const userSnapshot = await getDocs(usersCol);
-    const users = userSnapshot.docs.map((doc) => doc.data());
-    return users;
+  private readonly db: Firestore
+  constructor (db: Firestore) {
+    this.db = db
   }
 
-  async getUserByEmail(email: string): Promise<User | null> {
-    const usersCol = collection(this.db, "users");
-    const q = query(usersCol, where("email", "==", email));
-    const snapshot = await getDocs(q);
-    const doc = snapshot.docs[0];
+  async getUsers () {
+    const usersCol = collection(this.db, 'users')
+    const userSnapshot = await getDocs(usersCol)
+    const users = userSnapshot.docs.map((doc) => doc.data())
+    return users
+  }
+
+  async getUserByEmail (email: string): Promise<User | null> {
+    const usersCol = collection(this.db, 'users')
+    const q = query(usersCol, where('email', '==', email))
+    const snapshot = await getDocs(q)
+    const doc = snapshot.docs[0]
     if (!doc) {
-      return null;
+      return null
     }
-    const data = doc.data();
-    return { ...data, id: doc.id } as User;
+    const data = doc.data()
+    const user: User = { ...data, id: doc.id } as User
+    return user
   }
 
-  generateUUID(): string {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+  generateUUID (): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,
       function (c) {
-        let r = (Math.random() * 16) | 0,
-          v = c === "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
+        const r = (Math.random() * 16) | 0
+        const v = c === 'x' ? r : (r & 0x3) | 0x8
+        return v.toString(16)
       }
-    );
+    )
   }
 
-  async login(firstName: string, lastName: string, email: string) {
-    let userDoc = await this.getUserByEmail(email);
-    const session = this.generateUUID();
+  async login (firstName: string, lastName: string, email: string) {
+    const userDoc = await this.getUserByEmail(email)
+    const session = this.generateUUID()
 
     if (userDoc) {
       // If user exists, refresh session
-      await setDoc(doc(this.db, "users", userDoc.id), { 
+      await setDoc(doc(this.db, 'users', userDoc.id), {
         session,
         firstName,
         lastName,
-        email,
-      });
+        email
+      })
     } else {
       // If user doesn't exist, create a new one
-      await addDoc(collection(this.db, "users"), {
+      await addDoc(collection(this.db, 'users'), {
         firstName,
         lastName,
         email,
-        session,
-      });
+        session
+      })
     }
 
-    return session;
+    return session
   }
 }
 
-export const userDBManager = new UserDBManager(db);
+export const userDBManager = new UserDBManager(db)
