@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 function postContact(contact: Object){
-    const promise = fetch("http://localhost:3000/api/contacts", {
+    const promise = fetch("/api/addContact", {
         method: "POST",
         headers:{
             "Content-Type": "application/json"
