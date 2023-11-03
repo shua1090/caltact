@@ -8,9 +8,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 function postContact(contact: Object){
+    const token = fetch("/api/utils/verifyUser")
+    .then((res) => {return res})
+    .catch((error) => {console.log(error)});
+
     const promise = fetch("/api/addContact", {
         method: "POST",
         headers:{
+            // Authorization: token,
             "Content-Type": "application/json"
         },
         body: JSON.stringify(contact)
@@ -53,6 +58,10 @@ export default function AddPage(){
         .then((res : Response) => {
             if(res.status === 201){
                 return res.json();
+            }
+            else if (res.status === 401){
+                alert("Unauthorized");
+                return undefined;
             }
             else{
                 return undefined;
@@ -162,6 +171,11 @@ export default function AddPage(){
                 break;
             }
         }
+    }
+
+    if(!localStorage.getItem("token")){
+        router.push('/signin');
+        return <div></div>
     }
 
     return (
