@@ -71,14 +71,13 @@ export default async function handler(
       }
     }
 
-    let user = await userManager.userDBManager.getUserByEmail(req.body["email"]);
+    let user = await userManager.getUserByEmail(req.body["email"]);
     let userid: string;
     if (user?.id != undefined){
       userid = user.id;
           // Gets the contact we just added in and sends it back
       return res.status(404).json({
         message: await contactManager
-        .contactDBManager
         .getContacts(userid)
         .then((arr)=>arr[arr.length-1])
       });

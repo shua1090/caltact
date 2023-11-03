@@ -89,5 +89,5 @@ class UserDBManager {
 }
 
 const userDBManager = new UserDBManager(db);
-const exports = { userDBManager };
+const exports = userDBManager ;
 export default exports;

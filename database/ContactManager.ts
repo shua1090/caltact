@@ -61,5 +61,5 @@ class ContactDBManager {
 }
 
 const contactDBManager = new ContactDBManager(db);
-const exports = { contactDBManager };
+const exports = contactDBManager;
 export default exports;
