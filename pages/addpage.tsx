@@ -3,7 +3,7 @@ import Header from "@/components/header";
 import Image from "next/image";
 import TextEntry from "@/components/textentry";
 import pfp from "../public/pfp.png";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -24,11 +24,6 @@ function postContact(contact: Object) {
 }
 
 export default function AddPage() {
-  const [isClient, setIsClient] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const [contact, setContact] = useState({
     photo: "",
@@ -176,7 +171,7 @@ export default function AddPage() {
     }
   }
 
-  if (!localStorage.getItem("token")) {
+  if(localStorage.getItem("token") === null) {
     router.push("/signin");
     return <div></div>;
   }
