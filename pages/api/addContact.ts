@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { OAuth2Client } from 'google-auth-library';
-import managers from '../../database/ContactManager'
+import contactManager from '../../database/ContactManager'
+import userManager from '../../database/index'
+
 import { STATUS_CODES } from 'http';
 import contact from './types/contact';
 
@@ -19,33 +21,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     let c =  {
-      photo: (req.body["photo"] !== undefined) ? req.body["photo"] : null,
-      college: (req.body["college"] !== undefined) ? req.body["college"] : null,
-      major: (req.body["major"] !== undefined) ? req.body["major"] : null,
-      firstName: (req.body["firstName"] !== undefined) ? req.body["firstName"] : null,
-      lastName: (req.body["lastName"] !== undefined) ? req.body["lastName"] : null,
-      email: (req.body["email"] !== undefined) ? req.body["email"] : null,
-      phoneNumber: (req.body["phoneNumber"] !== undefined) ? req.body["phoneNumber"] : null,
-      birthday: (req.body["birthday"] !== undefined) ? req.body["birthday"] : null,
-      country: (req.body["country"] !== undefined) ? req.body["country"] : null,
-      street: (req.body["street"] !== undefined) ? req.body["street"] : null,
-      city: (req.body["city"] !== undefined) ? req.body["city"] : null,
-      region: (req.body["region"] !== undefined) ? req.body["region"] : null,
-      postalCode: (req.body["postalCode"] !== undefined) ? req.body["postalCode"] : null,
-      facebook: (req.body["facebook"] !== undefined) ? req.body["facebook"] : null,
-      instagram: (req.body["instagram"] !== undefined) ? req.body["instagram"] : null,
-      snapchat: (req.body["snapchat"] !== undefined) ? req.body["snapchat"] : null,
-      twitter: (req.body["twitter"] !== undefined) ? req.body["twitter"] : null,
-      linkedin: (req.body["linkedin"] !== undefined) ? req.body["linkedin"] : null,
-      discord: (req.body["discord"] !== undefined) ? req.body["discord"] : null,
-      github: (req.body["github"] !== undefined) ? req.body["github"] : null,
-      spotify: (req.body["spotify"] !== undefined) ? req.body["spotify"] : null
+      photo: (req.body.contact["photo"] !== undefined) ? req.body.contact["photo"] : null,
+      college: (req.body.contact["college"] !== undefined) ? req.body.contact["college"] : null,
+      major: (req.body.contact["major"] !== undefined) ? req.body.contact["major"] : null,
+      firstName: (req.body.contact["firstName"] !== undefined) ? req.body.contact["firstName"] : null,
+      lastName: (req.body.contact["lastName"] !== undefined) ? req.body.contact["lastName"] : null,
+      email: (req.body.contact["email"] !== undefined) ? req.body.contact["email"] : null,
+      phoneNumber: (req.body.contact["phoneNumber"] !== undefined) ? req.body.contact["phoneNumber"] : null,
+      birthday: (req.body.contact["birthday"] !== undefined) ? req.body.contact["birthday"] : null,
+      country: (req.body.contact["country"] !== undefined) ? req.body.contact["country"] : null,
+      street: (req.body.contact["street"] !== undefined) ? req.body.contact["street"] : null,
+      city: (req.body.contact["city"] !== undefined) ? req.body.contact["city"] : null,
+      region: (req.body.contact["region"] !== undefined) ? req.body.contact["region"] : null,
+      postalCode: (req.body.contact["postalCode"] !== undefined) ? req.body.contact["postalCode"] : null,
+      facebook: (req.body.contact["facebook"] !== undefined) ? req.body.contact["facebook"] : null,
+      instagram: (req.body.contact["instagram"] !== undefined) ? req.body.contact["instagram"] : null,
+      snapchat: (req.body.contact["snapchat"] !== undefined) ? req.body.contact["snapchat"] : null,
+      twitter: (req.body.contact["twitter"] !== undefined) ? req.body.contact["twitter"] : null,
+      linkedin: (req.body.contact["linkedin"] !== undefined) ? req.body.contact["linkedin"] : null,
+      discord: (req.body.contact["discord"] !== undefined) ? req.body.contact["discord"] : null,
+      github: (req.body.contact["github"] !== undefined) ? req.body.contact["github"] : null,
+      spotify: (req.body.contact["spotify"] !== undefined) ? req.body.contact["spotify"] : null
     }
-
-    await managers.contactDBManager.addContact(req.body["userid"], c);
-    // return res.status(404).json({message: req.body["userid"]});
-    return res.status(404).json({message: await managers.contactDBManager.getContacts(req.body["userid"]).then((arr)=>{
-      return arr[arr.length-1]})});
+    let user = await userManager.userDBManager.getUserByEmail(req.body["email"]);
+    let userid: string;
+    if (user?.id != undefined){
+      userid = user.id;
+      return res.status(404).json({message: await contactManager.contactDBManager.getContacts(userid).then((arr)=>{
+        return arr[arr.length-1]})});
+    } else {
+      console.log(`Could not find user with email ${req.body["email"]}`);
+      return res.status(401).json({message: `Authentication failed, ${req.body["email"]} dne.`});
+    }
   } catch (error) {
     console.log(error);
     return res.status(401).json({ message: 'Authentication failed', error: (error as any).message });
