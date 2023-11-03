@@ -38,27 +38,27 @@ export default async function handler(
   try {
     // Get all the request params into contact object
     let contactToAdd: contact =  {
-      photo: req.body["photo"],
-      college: req.body["college"],
-      major: req.body["major"],
-      firstName: req.body["firstName"],
-      lastName: req.body["lastName"],
-      email: req.body["email"],
-      phoneNumber: req.body["phoneNumber"],
-      birthday: req.body["birthday"],
-      country: req.body["country"],
-      street: req.body["street"],
-      city: req.body["city"],
-      region: req.body["region"],
-      postalCode: req.body["postalCode"],
-      facebook: req.body["facebook"],
-      instagram: req.body["instagram"],
-      snapchat: req.body["snapchat"],
-      twitter: req.body["twitter"],
-      linkedin: req.body["linkedin"],
-      discord: req.body["discord"],
-      github: req.body["github"],
-      spotify: req.body["spotify"]
+      photo: req.body.contact["photo"],
+      college: req.body.contact["college"],
+      major: req.body.contact["major"],
+      firstName: req.body.contact["firstName"],
+      lastName: req.body.contact["lastName"],
+      email: req.body.contact["email"],
+      phoneNumber: req.body.contact["phoneNumber"],
+      birthday: req.body.contact["birthday"],
+      country: req.body.contact["country"],
+      street: req.body.contact["street"],
+      city: req.body.contact["city"],
+      region: req.body.contact["region"],
+      postalCode: req.body.contact["postalCode"],
+      facebook: req.body.contact["facebook"],
+      instagram: req.body.contact["instagram"],
+      snapchat: req.body.contact["snapchat"],
+      twitter: req.body.contact["twitter"],
+      linkedin: req.body.contact["linkedin"],
+      discord: req.body.contact["discord"],
+      github: req.body.contact["github"],
+      spotify: req.body.contact["spotify"]
     }
     
     // Nullify undefined properties (undefined not applicable to firestore)
@@ -75,15 +75,16 @@ export default async function handler(
     let userid: string;
     if (user?.id != undefined){
       userid = user.id;
-          // Gets the contact we just added in and sends it back
-      return res.status(404).json({
+      // Gets the contact we just added in and sends it back
+      await contactManager.addContact(userid, contactToAdd);
+      return res.status(201).json({
         message: await contactManager
         .getContacts(userid)
         .then((arr)=>arr[arr.length-1])
       });
     } else {
       console.log(`Could not find user with email ${req.body["email"]}`);
-      return res.status(200).json({message: `Authentication failed, ${req.body["email"]} dne.`});
+      return res.status(401).json({message: `Authentication failed, ${req.body["email"]} dne.`});
     }
   } catch (error) {
     console.log(`Error in addContacts: ${error}`);

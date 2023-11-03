@@ -32,7 +32,6 @@ class ContactDBManager {
     const q = query(usersCol, where(documentId(), "==", id));
     const snapshot = await getDocs(q);
     const s = snapshot.docs.map((doc)=>doc.data());
-    console.log(s[0]["contacts"]);
     return s[0]["contacts"];
   }
 
