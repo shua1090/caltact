@@ -1,179 +1,178 @@
-import "../app/globals.css";
-import Header from "@/components/header";
-import Image from "next/image";
-import TextEntry from "@/components/textentry";
-import pfp from "../public/pfp.png";
-import { FormEvent, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import '../app/globals.css'
+import Header from '@/components/header'
+import Image from 'next/image'
+import TextEntry from '@/components/textentry'
+import pfp from '../public/pfp.png'
+import { type FormEvent, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
-function postContact(contact: Object) {
-  const token = localStorage.getItem("session");
-  const promise = fetch("/api/addContact", {
-    method: "POST",
+async function postContact (contact: Record<string, unknown>) {
+  const token = localStorage.getItem('session')
+  const promise = fetch('/api/addContact', {
+    method: 'POST',
     headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token
     },
     body: JSON.stringify({
-        email: localStorage.getItem("email"),
-        contact: contact,
-    }),
-  });
-  return promise;
+      email: localStorage.getItem('email'),
+      contact
+    })
+  })
+  return await promise
 }
 
-export default function AddPage() {
-
+export default function AddPage () {
   const [contact, setContact] = useState({
-    photo: "",
-    college: "",
-    major: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    birthday: "",
-    country: "",
-    street: "",
-    city: "",
-    region: "",
-    postalCode: "",
-    facebook: "",
-    instagram: "",
-    snapchat: "",
-    twitter: "",
-    linkedin: "",
-    discord: "",
-    github: "",
-    spotify: "",
-  });
+    photo: '',
+    college: '',
+    major: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    birthday: '',
+    country: '',
+    street: '',
+    city: '',
+    region: '',
+    postalCode: '',
+    facebook: '',
+    instagram: '',
+    snapchat: '',
+    twitter: '',
+    linkedin: '',
+    discord: '',
+    github: '',
+    spotify: ''
+  })
 
-  const router = useRouter();
+  const router = useRouter()
 
-  function handleSubmit(event: FormEvent) {
+  function handleSubmit (event: FormEvent) {
     /* handle form submission */
-    event.preventDefault();
+    event.preventDefault()
 
     postContact(contact)
-      .then((res: Response) => {
+      .then(async (res: Response) => {
         if (res.status === 201) {
-          return res.json();
+          return await res.json()
         } else if (res.status === 401) {
-          alert("Authorization failed.");
-          return undefined;
+          alert('Authorization failed.')
+          return undefined
         } else {
-          return undefined;
+          return undefined
         }
       })
       .then((res) => {
         // redirect to user home page
         if (res !== undefined) {
-          alert("Contact added successfully!");
+          alert('Contact added successfully!')
         } else {
-          alert("Contact could not be added.");
+          alert('Contact could not be added.')
         }
-        router.push("/");
+        void router.push('/')
       })
       .catch((error: Error) => {
-        console.log(error);
-      });
+        console.log(error)
+      })
   }
 
-  function handleChange(event: FormEvent) {
-    const { name, value } = event.target as HTMLFormElement;
+  function handleChange (event: FormEvent) {
+    const { name, value } = event.target as HTMLFormElement
     switch (name) {
-      case "file-upload": {
-        setContact({ ...contact, photo: value.files[0] });
-        console.log(contact.photo);
-        break;
+      case 'file-upload': {
+        setContact({ ...contact, photo: value.files[0] })
+        console.log(contact.photo)
+        break
       }
-      case "college": {
-        setContact({ ...contact, college: value });
-        break;
+      case 'college': {
+        setContact({ ...contact, college: value })
+        break
       }
-      case "major": {
-        setContact({ ...contact, major: value });
-        break;
+      case 'major': {
+        setContact({ ...contact, major: value })
+        break
       }
-      case "first-name": {
-        setContact({ ...contact, firstName: value });
-        break;
+      case 'first-name': {
+        setContact({ ...contact, firstName: value })
+        break
       }
-      case "last-name": {
-        setContact({ ...contact, lastName: value });
-        break;
+      case 'last-name': {
+        setContact({ ...contact, lastName: value })
+        break
       }
-      case "email": {
-        setContact({ ...contact, email: value });
-        break;
+      case 'email': {
+        setContact({ ...contact, email: value })
+        break
       }
-      case "phone-number": {
-        setContact({ ...contact, phoneNumber: value });
-        break;
+      case 'phone-number': {
+        setContact({ ...contact, phoneNumber: value })
+        break
       }
-      case "birthday": {
-        setContact({ ...contact, birthday: value });
-        break;
+      case 'birthday': {
+        setContact({ ...contact, birthday: value })
+        break
       }
-      case "country": {
-        setContact({ ...contact, country: value });
-        break;
+      case 'country': {
+        setContact({ ...contact, country: value })
+        break
       }
-      case "street-address": {
-        setContact({ ...contact, street: value });
-        break;
+      case 'street-address': {
+        setContact({ ...contact, street: value })
+        break
       }
-      case "city": {
-        setContact({ ...contact, city: value });
-        break;
+      case 'city': {
+        setContact({ ...contact, city: value })
+        break
       }
-      case "region": {
-        setContact({ ...contact, region: value });
-        break;
+      case 'region': {
+        setContact({ ...contact, region: value })
+        break
       }
-      case "postal-code": {
-        setContact({ ...contact, postalCode: value });
-        break;
+      case 'postal-code': {
+        setContact({ ...contact, postalCode: value })
+        break
       }
-      case "facebook": {
-        setContact({ ...contact, facebook: value });
-        break;
+      case 'facebook': {
+        setContact({ ...contact, facebook: value })
+        break
       }
-      case "instagram": {
-        setContact({ ...contact, instagram: value });
-        break;
+      case 'instagram': {
+        setContact({ ...contact, instagram: value })
+        break
       }
-      case "snapchat": {
-        setContact({ ...contact, snapchat: value });
-        break;
+      case 'snapchat': {
+        setContact({ ...contact, snapchat: value })
+        break
       }
-      case "twitter": {
-        setContact({ ...contact, twitter: value });
-        break;
+      case 'twitter': {
+        setContact({ ...contact, twitter: value })
+        break
       }
-      case "linkedin": {
-        setContact({ ...contact, linkedin: value });
-        break;
+      case 'linkedin': {
+        setContact({ ...contact, linkedin: value })
+        break
       }
-      case "discord": {
-        setContact({ ...contact, discord: value });
-        break;
+      case 'discord': {
+        setContact({ ...contact, discord: value })
+        break
       }
-      case "github": {
-        setContact({ ...contact, github: value });
-        break;
+      case 'github': {
+        setContact({ ...contact, github: value })
+        break
       }
-      case "spotify": {
-        setContact({ ...contact, spotify: value });
-        break;
+      case 'spotify': {
+        setContact({ ...contact, spotify: value })
+        break
       }
     }
   }
 
-  if(localStorage.getItem("token") === null) {
-    router.push("/signin");
-    return <div></div>;
+  if (localStorage.getItem('token') === null) {
+    void router.push('/signin')
+    return <div></div>
   }
 
   return (
@@ -553,5 +552,5 @@ export default function AddPage() {
         </form>
       </div>
     </main>
-  );
+  )
 }

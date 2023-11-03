@@ -1,16 +1,16 @@
-import "../app/globals.css";
-import { FormEvent } from "react";
+import '../app/globals.css'
+import { type FormEvent } from 'react'
 
 interface TextEntryProps {
-    label: string;
-    id: string;
-    placeholder?: string;
-    value: string;
-    changeHandler: (event: FormEvent) => void;
+  label: string
+  id: string
+  placeholder?: string
+  value: string
+  changeHandler: (event: FormEvent) => void
 }
 
-export default function TextEntry(props: TextEntryProps){
-    return (
+export default function TextEntry (props: TextEntryProps) {
+  return (
         <div>
             <label htmlFor={props.id} className="block text-sm font-medium leading-6 text-gray-900">
                 {props.label}
@@ -28,5 +28,5 @@ export default function TextEntry(props: TextEntryProps){
                 />
             </div>
         </div>
-    );
+  )
 };
