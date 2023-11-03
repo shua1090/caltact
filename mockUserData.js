@@ -4,7 +4,7 @@ const mockUserData = {
     firstName: "Evan",
     lastName: "Cao",
     phone: "6265581789",
-    profilePhotoURL:  "www___",
+    profilePhotoURL:  "",
     instagram: "evancao",
     snapChat: "idk",
     discord: "idk",
