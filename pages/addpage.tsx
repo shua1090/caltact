@@ -24,11 +24,6 @@ function postContact(contact: Object) {
 }
 
 export default function AddPage() {
-  const [isClient, setIsClient] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const [contact, setContact] = useState({
     photo: "",
@@ -176,7 +171,7 @@ export default function AddPage() {
     }
   }
 
-  if (!localStorage.getItem("token")) {
+  if(localStorage.getItem("token") === null) {
     router.push("/signin");
     return <div></div>;
   }
