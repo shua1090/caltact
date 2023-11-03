@@ -11,12 +11,12 @@ export default async function handler(
   req: NextApiRequest, 
   res: NextApiResponse
 ){
-
   if (req.method !== 'POST') {
     return res.status(405).end();
   }
 
-  // // Olex's special authentication method
+
+  // Olex's special authentication method
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
     return res.status(401).json({ message: 'Authorization token missing' });
