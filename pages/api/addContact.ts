@@ -3,6 +3,7 @@ import contactManager from '../../database/ContactManager'
 import userManager from '../../database/index'
 import type contact from './types/contact'
 import { profanity } from '@2toad/profanity'
+import verifyUser from './utils/verifyUser'
 
 // Handler function to handle when a user attempts to add a new contact
 // Requires types/contact.ts
@@ -15,18 +16,18 @@ export default async function handler (
   }
 
   // Olex's special authentication method
-  const token = req.headers.authorization?.split(' ')[1]
-  if (!token) {
-    res.status(401).json({ message: 'Authorization token missing' }); return
+  if ((await verifyUser(req))) {
+    console.log('Verified user')
+  } else {
+    res.status(401).json({ message: 'Invalid token' }); return
   }
 
   // For each argument passed in, check through the profanity filter
-  for (const prop in req.body) {
-    if (profanity.exists(req.body[prop])) {
+  for (const prop in req.body.contact) {
+    if (profanity.exists(req.body.contact[prop])) {
       res.status(403).json({
         // Just a flag, so its easy to check (code == PROF) back in frontend
-        code: 'PROF',
-        message: `Profanity filter flagged '${req.body[prop]}'`
+        message: `Profanity filter flagged ${prop}:'${req.body.contact[prop]}'`
       }); return
     }
   }

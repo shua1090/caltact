@@ -7,7 +7,7 @@ The browser has to send the user's email in the body of the request and the user
 */
 export default async function handler (req: NextApiRequest, res: NextApiResponse) {
   if (await verifyUser(req)) {
-    res.status(200).json({ message: 'User is verified' }); return
+    res.status(200).json({ message: 'User is verified' })
   }
   res.status(401).json({ message: 'User is not verified' })
 }

@@ -8,12 +8,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 async function postContact (contact: Record<string, unknown>) {
-  const token = localStorage.getItem('session')
+  const token = localStorage.getItem('token')
   const promise = fetch('/api/addContact', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token
+      authorization: 'Bearer ' + token
     },
     body: JSON.stringify({
       email: localStorage.getItem('email'),
@@ -61,6 +61,8 @@ export default function AddPage () {
         } else if (res.status === 401) {
           alert('Authorization failed.')
           return undefined
+        } else if (res.status === 403) {
+          alert(`Bad word: ${await res.json().then((js) => js.message)}`)
         } else {
           return undefined
         }
