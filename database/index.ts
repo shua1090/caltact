@@ -88,4 +88,6 @@ class UserDBManager {
   }
 }
 
-export const userDBManager = new UserDBManager(db)
+const userDBManager = new UserDBManager(db)
+const exports = userDBManager
+export default exports

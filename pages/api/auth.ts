@@ -1,6 +1,6 @@
 import { type NextApiRequest, type NextApiResponse } from 'next'
 import { OAuth2Client } from 'google-auth-library'
-import { userDBManager } from '../../database'
+import userDBManager from '../../database/index'
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? ''
 const client = new OAuth2Client(CLIENT_ID)
