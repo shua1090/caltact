@@ -14,6 +14,7 @@ export default function Header () {
       </Link>
       <Link href="/contacts">
         <p className="text-lg font-light">Contacts</p>
+      </Link>
       <Link href="/individualContact">
         <p className="text-lg font-light">IndividualContact</p>
       </Link>
