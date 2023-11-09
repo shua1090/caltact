@@ -25,7 +25,15 @@ export default async function handler (
       // TODO: Fix status code
       res.status(400).json({ message: 'Errored out getting user by passed-in email' })
     } else {
-      const contacts = await contactManager.getContacts(u.id)
+      let contacts = await contactManager.getContacts(u.id)
+      if (req.body.important === true) {
+        contacts = contacts.filter((c: { important: boolean }) => c.important)
+      }
+      if (req.body.search) {
+        contacts = contacts.filter(
+          (c: { firstName: string, lastName: string }) => (c.firstName + ' ' + c.lastName).includes(req.body.search)
+        )
+      }
       res.status(200).json({ contacts })
     }
   } catch (error) {
