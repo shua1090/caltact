@@ -27,6 +27,10 @@ class ContactDBManager {
     const q = query(usersCol, where(documentId(), '==', id))
     const snapshot = await getDocs(q)
     const s = snapshot.docs.map((doc) => doc.data())
+    if (s[0] === undefined) {
+      console.log(`Could not find user with id ${id}`)
+      return null
+    }
     return s[0].contacts
   }
 
