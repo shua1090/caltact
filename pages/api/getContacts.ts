@@ -21,7 +21,6 @@ export default async function handler (
   }
   try {
     const u = await userManager.getUserByEmail(req.body.email)
-    console.log(u)
     if (u === null) {
       // TODO: Fix status code
       res.status(400).json({ message: 'Errored out getting user by passed-in email' })
