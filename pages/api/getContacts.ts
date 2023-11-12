@@ -24,20 +24,21 @@ export default async function handler (
     if (u === null) {
       res.status(403).json({ message: 'Errored out getting user by passed-in email' })
     } else {
-      const contacts = await contactManager.getContacts(u.id)
+      let contacts = await contactManager.getContacts(u.id)
       if (req.body.index !== null || req.body.index !== undefined) {
         if (req.body.index <= contacts.length) {
           res.status(200).json({ contacts: contacts[req.body.index] })
         }
-      if (req.body.important === true) {
-        contacts = contacts.filter((c: { important: boolean }) => c.important)
+        if (req.body.important === true) {
+          contacts = contacts.filter((c: { important: boolean }) => c.important)
+        }
+        if (req.body.search) {
+          contacts = contacts.filter(
+            (c: { firstName: string, lastName: string }) => (c.firstName.toLowerCase() + ' ' + c.lastName.toLowerCase()).includes(req.body.search.toLowerCase())
+          )
+        }
+        res.status(200).json({ contacts })
       }
-      if (req.body.search) {
-        contacts = contacts.filter(
-          (c: { firstName: string, lastName: string }) => (c.firstName.toLowerCase() + ' ' + c.lastName.toLowerCase()).includes(req.body.search.toLowerCase())
-        )
-      }
-      res.status(200).json({ contacts })
     }
   } catch (error) {
     console.log(`Error in addContacts: ${error as string}`)
