@@ -3,7 +3,7 @@ import contactManager from '../../database/ContactManager'
 import userManager from '../../database/index'
 import verifyUser from './utils/verifyUser'
 
-// Handler function to handle when a user attempts to add a new contact
+// Handler function to handle when a user attempts to get contacts
 // Requires types/contact.ts
 export default async function handler (
   req: NextApiRequest,
@@ -22,10 +22,13 @@ export default async function handler (
   try {
     const u = await userManager.getUserByEmail(req.body.email)
     if (u === null) {
-      // TODO: Fix status code
-      res.status(400).json({ message: 'Errored out getting user by passed-in email' })
+      res.status(403).json({ message: 'Errored out getting user by passed-in email' })
     } else {
-      let contacts = await contactManager.getContacts(u.id)
+      const contacts = await contactManager.getContacts(u.id)
+      if (req.body.index !== null || req.body.index !== undefined) {
+        if (req.body.index <= contacts.length) {
+          res.status(200).json({ contacts: contacts[req.body.index] })
+        }
       if (req.body.important === true) {
         contacts = contacts.filter((c: { important: boolean }) => c.important)
       }
@@ -38,7 +41,7 @@ export default async function handler (
     }
   } catch (error) {
     console.log(`Error in addContacts: ${error as string}`)
-    res.status(400).json({
+    res.status(403).json({
       message: 'Authentication failed',
       error: (error as any).message
     })

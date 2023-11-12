@@ -34,23 +34,24 @@ class ContactDBManager {
     return s[0].contacts
   }
 
-  // add a contact object to the user with the id
-  async removeContact (id: string, index: BigInteger) {
+  // if contact null, delete contact, else replace
+  async modifyContact (id: string, contact: Contact | null, index: BigInteger) {
     const contactsCol = collection(this.db, 'contacts')
     const q = query(contactsCol, where(documentId(), '==', id))
     const contactDoc = (await getDocs(q)).docs
     const contactsData = contactDoc.map((doc: { data: () => any }) => doc.data())[0]
-    // If there are no contacts for this user yet, create a new array
-    // with the new contact, and add it
     if (contactDoc === undefined || contactsData === undefined) {
       return false
     }
     if (index >= contactsData.contacts.length) {
       return false
     } else {
-      console.log(contactsData.contacts.length, index)
       const updatedcontacts = contactsData.contacts
-      updatedcontacts.splice(index, 1)
+      if (contact !== null) {
+        updatedcontacts.splice(index, 1, contact)
+      } else {
+        updatedcontacts.splice(index, 1)
+      }
       await setDoc(doc(this.db, 'contacts', id), {
         contacts: updatedcontacts
       })
