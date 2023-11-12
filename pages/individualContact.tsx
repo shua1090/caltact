@@ -1,8 +1,8 @@
 // pages/individualContact.tsx
 import '../app/globals.css'
-import React from 'react';
-import Link from 'next/link';
-import mockUserData from '../mockUserData.js'; // Update the path accordingly
+import React from 'react'
+import Link from 'next/link'
+import mockUserData from '../mockUserData.js' // Update the path accordingly
 
 const IndividualContact = () => {
   return (
@@ -29,8 +29,7 @@ const IndividualContact = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-
-export default IndividualContact;
+export default IndividualContact
