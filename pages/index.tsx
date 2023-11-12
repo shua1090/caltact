@@ -20,8 +20,13 @@ async function fetchContacts (setContacts: any, search: string | undefined, impo
       important
     })
   })
-  const data = await response.json()
-  setContacts(data.contacts)
+  try {
+    const data = await response.json()
+    setContacts(data.contacts)
+  } catch (e) {
+    // Redirect user to login page
+    window.location.href = '/signin'
+  }
 }
 
 export default function Index () {
@@ -52,7 +57,7 @@ export default function Index () {
       <div className="px-10">
         <div className="flex flex-row gap-6 items-center">
           <input
-            className="border-2 border-gray-300 rounded-md p-2 w-full"
+            className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
             type="text"
             placeholder="Search"
             value={search}
@@ -64,7 +69,7 @@ export default function Index () {
             Important{' '}
             <input
               type="checkbox"
-              className=""
+              className="text-black"
               style={{
                 width: '1.5rem',
                 height: '1.5rem'
@@ -83,16 +88,20 @@ export default function Index () {
           </button>
         </div>
         <div className='contacts gap-2 mt-10'>
-        {contacts.map((contact, i) => (
+        {contacts
+          ? contacts.map((contact, i) => (
           <div key={i}>
             <ContactCard
               photo={contact.photo ?? ''}
               firstName={contact.firstName ?? undefined}
               lastName={contact.lastName ?? undefined}
               phoneNumber={contact.phoneNumber ?? ''}
+              index={i}
+              email={contact.email ?? ''}
             />
           </div>
-        ))}
+          ))
+          : <div className="text-center text-lg font-light">Please login or add more contacts</div>}
         </div>
       </div>
     </main>

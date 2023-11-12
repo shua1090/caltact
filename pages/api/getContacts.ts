@@ -29,6 +29,13 @@ export default async function handler (
         if (req.body.index <= contacts.length) {
           res.status(200).json({ contacts: contacts[req.body.index] })
         }
+      if (req.body.important === true) {
+        contacts = contacts.filter((c: { important: boolean }) => c.important)
+      }
+      if (req.body.search) {
+        contacts = contacts.filter(
+          (c: { firstName: string, lastName: string }) => (c.firstName.toLowerCase() + ' ' + c.lastName.toLowerCase()).includes(req.body.search.toLowerCase())
+        )
       }
       res.status(200).json({ contacts })
     }
