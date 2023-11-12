@@ -3,11 +3,11 @@ import Header from '@/components/header'
 import Image from 'next/image'
 import TextEntry from '@/components/textentry'
 import pfp from '../public/pfp.png'
-import { type FormEvent, useState } from 'react'
+import { type FormEvent, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-async function postContact (contact: Record<string, unknown>) {
+async function postContact (contact: Record<string, unknown>, image: File | undefined) {
   const token = localStorage.getItem('token')
   const promise = fetch('/api/addContact', {
     method: 'POST',
@@ -17,15 +17,16 @@ async function postContact (contact: Record<string, unknown>) {
     },
     body: JSON.stringify({
       email: localStorage.getItem('email'),
-      contact
+      contact,
+      photo: image
     })
   })
   return await promise
 }
 
 export default function AddPage () {
+  const [isClient, setIsClient] = useState(false)
   const [contact, setContact] = useState({
-    photo: '',
     college: '',
     major: '',
     firstName: '',
@@ -47,14 +48,23 @@ export default function AddPage () {
     github: '',
     spotify: ''
   })
+  const [imageFile, setImageFile] = useState<File>()
 
   const router = useRouter()
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  if (!isClient) {
+    return null // or return a loader, placeholder, etc.
+  }
 
   function handleSubmit (event: FormEvent) {
     /* handle form submission */
     event.preventDefault()
 
-    postContact(contact)
+    postContact(contact, imageFile)
       .then(async (res: Response) => {
         if (res.status === 201) {
           return await res.json()
@@ -81,16 +91,19 @@ export default function AddPage () {
       })
   }
 
+  function handleFileChange (event: FormEvent) {
+    const value = event.target as HTMLInputElement
+    if (value.files) {
+      setImageFile(value.files[0])
+    }
+  }
+
   function handleChange (event: FormEvent) {
-    const { name, value } = event.target as HTMLFormElement
+    const { name, value } = event.target as HTMLInputElement
     switch (name) {
-      case 'file-upload': {
-        setContact({ ...contact, photo: value.files[0] })
-        console.log(contact.photo)
-        break
-      }
       case 'college': {
         setContact({ ...contact, college: value })
+        console.log(value)
         break
       }
       case 'major': {
@@ -199,7 +212,7 @@ export default function AddPage () {
                   </div>
                   <div className="mt-2 flex items-center gap-x-3">
                     <Image
-                      src={contact.photo ? contact.photo : pfp}
+                      src={imageFile ? URL.createObjectURL(imageFile) : pfp}
                       width="50"
                       height="50"
                       alt="upload profile picture preview"
@@ -215,6 +228,7 @@ export default function AddPage () {
                       name="file-upload"
                       type="file"
                       className="sr-only"
+                      onChange={handleFileChange}
                     />
                   </div>
                 </div>
