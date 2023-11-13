@@ -11,6 +11,7 @@ interface DataInterface {
   phoneNumber: string | undefined
   email: string | undefined
   index: number
+  setIsLoading: any
 }
 
 export default function ContactCard ({
@@ -19,11 +20,31 @@ export default function ContactCard ({
   lastName,
   phoneNumber,
   index,
-  email
+  email,
+  setIsLoading
 }: DataInterface) {
+  const router = useRouter()
+  function deleteContact (index: number) {
+    setIsLoading(true)
+    fetch('/api/updateContact', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({
+        email: localStorage.getItem('email'),
+        index
+      })
+    }).then(() => {
+      router.reload()
+    }).catch(() => {
+      router.reload()
+    })
+  }
   return (
     <div className="relative cursor-pointer bg-white border-gray-200 border-2 rounded-xl m-2 w-50 h-68 flex justify-center">
-      <button>
+      <button onClick={() => { deleteContact(index) }}>
         <Delete className="text-indigo-800 absolute top-5 right-5" size={25} />
       </button>
       <div className="m-4 flex flex-col items-center justify-center">
