@@ -6,6 +6,7 @@ import type contact from './api/types/contact'
 import './index.css'
 import ContactCard from '@/components/contact'
 import { set } from 'firebase/database'
+import Link from 'next/link';
 
 async function fetchContacts (setIsLoading: any, setContacts: any, search: string | undefined, important: boolean | undefined) {
   setIsLoading(true)
@@ -92,16 +93,21 @@ export default function Index () {
         <div className='contacts gap-2 mt-10 w-screen'>
         {!isLoading && contacts
           ? contacts.map((contact, i) => (
-          <div key={i}>
-            <ContactCard
-              photo={contact.photo ?? ''}
-              firstName={contact.firstName ?? undefined}
-              lastName={contact.lastName ?? undefined}
-              phoneNumber={contact.phoneNumber ?? ''}
-              index={i}
-              email={contact.email ?? ''}
-              setIsLoading={setIsLoading}
-            />
+            <div key={i}>
+            {/* Wrap each ContactCard with Link and use passHref */}
+            <Link href="/individualContact" passHref>
+              <ContactCard
+                as="a" // specify 'a' as the 'as' prop
+                href={`/individualContact/${i}`}
+                photo={contact.photo ?? ''}
+                firstName={contact.firstName ?? undefined}
+                lastName={contact.lastName ?? undefined}
+                phoneNumber={contact.phoneNumber ?? ''}
+                index={i}
+                email={contact.email ?? ''}
+                setIsLoading={setIsLoading}
+              />
+            </Link>
           </div>
           ))
           : (!isLoading && <div className="text-center text-lg font-light">Please login or add more contacts</div>)}
