@@ -21,5 +21,6 @@ interface contact {
   discord?: string | null
   github?: string | null
   spotify?: string | null
+  important?: boolean | null
 }
 export default contact
