@@ -3,7 +3,7 @@ import Header from '@/components/header'
 import Image from 'next/image'
 import TextEntry from '@/components/textentry'
 import pfp from '../public/pfp.png'
-import { type FormEvent, useState } from 'react'
+import { type FormEvent, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -24,6 +24,11 @@ async function postContact (contact: Record<string, unknown>) {
 }
 
 export default function AddPage () {
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const [contact, setContact] = useState({
     photo: '',
     college: '',
@@ -172,7 +177,7 @@ export default function AddPage () {
     }
   }
 
-  if (localStorage.getItem('token') === null) {
+  if (isClient && localStorage.getItem('token') === null) {
     void router.push('/signin')
     return <div></div>
   }
