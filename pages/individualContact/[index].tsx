@@ -1,7 +1,6 @@
-// pages/individualContact/[index].tsx
-
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const DynamicContactPage = () => {
   const router = useRouter();
@@ -48,24 +47,33 @@ const DynamicContactPage = () => {
     }
   }, [index]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div>
-      <h1>User Details</h1>
-      {userData ? (
-        <div>
-          {Object.entries(userData).map(([key, value]) => (
-            <p key={key}>
-              <strong>{key}:</strong> {value}
-            </p>
-          ))}
-        </div>
-      ) : (
-        <p>User not found</p>
-      )}
+    <div className="bg-blue-200 min-h-screen flex items-center justify-center">
+      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-4 text-green-900">
+          {userData ? `${userData.firstName} ${userData.lastName}` : 'Loading...'}
+        </h1>
+        {userData && (
+          <>
+            <p className="text-gray-700 mb-2">Email: {userData.email}</p>
+            <p className="text-gray-700 mb-2">Phone: {userData.phone}</p>
+            <img
+              src={userData.profilePhotoURL}
+              alt="Profile"
+              className="mb-4 rounded-full w-32 h-32 mx-auto"
+            />
+            <p className="text-gray-700 mb-2">Instagram: {userData.instagram}</p>
+            <p className="text-gray-700 mb-2">Snapchat: {userData.snapChat}</p>
+            <p className="text-gray-700 mb-2">Discord: {userData.discord}</p>
+            <p className="text-gray-700 mb-2">LinkedIn: {userData.linkedin}</p>
+            <div className="text-center mt-4">
+              <Link href="/" className="text-blue-500 underline hover:text-blue-700">
+                Back to Home
+              </Link>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
