@@ -10,6 +10,7 @@ import {
   setDoc,
   getFirestore
 } from 'firebase/firestore/lite'
+import { getStorage } from 'firebase/storage'
 import { type User } from '@/pages/api/types/user'
 
 export const firebaseConfig = {
@@ -24,6 +25,7 @@ export const firebaseConfig = {
 
 export const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0]
 export const db = getFirestore(app)
+export const storage = getStorage(app)
 
 class UserDBManager {
   private readonly db: Firestore

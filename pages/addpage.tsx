@@ -7,6 +7,22 @@ import { type FormEvent, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
+// async function postPFP(image: File | undefined) {
+//   const token = localStorage.getItem('token')
+//   const promise = fetch('/api/addContact', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       authorization: 'Bearer ' + token
+//     },
+//     body: JSON.stringify({
+//       email: localStorage.getItem('email'),
+//       photo: image
+//     })
+//   })
+//   return await promise
+// }
+
 async function postContact (contact: Record<string, unknown>, image: File | undefined) {
   const token = localStorage.getItem('token')
   const promise = fetch('/api/addContact', {
@@ -17,8 +33,7 @@ async function postContact (contact: Record<string, unknown>, image: File | unde
     },
     body: JSON.stringify({
       email: localStorage.getItem('email'),
-      contact,
-      photo: image
+      contact
     })
   })
   return await promise
@@ -95,6 +110,7 @@ export default function AddPage () {
     const value = event.target as HTMLInputElement
     if (value.files) {
       setImageFile(value.files[0])
+      console.log(value.files[0])
     }
   }
 

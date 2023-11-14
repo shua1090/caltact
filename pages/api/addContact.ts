@@ -1,6 +1,7 @@
 import { type NextApiRequest, type NextApiResponse } from 'next'
 import contactManager from '../../database/ContactManager'
 import userManager from '../../database/index'
+import photoManager from '../../database/PhotoManager'
 import { profanity } from '@2toad/profanity'
 import verifyUser from './utils/verifyUser'
 import fillContact from './utils/fillContact'
@@ -38,6 +39,8 @@ export default async function handler (
     let userid: string
     if (user?.id !== undefined) {
       userid = user.id
+      // upload photo, get download link to add to database
+      // await photoManager.uploadPhoto(req.body.photo, `${userid}`)
       // Gets the contact we just added in and sends it back
       await contactManager.addContact(userid, contactToAdd)
       res.status(201).json({
