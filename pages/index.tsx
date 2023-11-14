@@ -95,7 +95,7 @@ export default function Index () {
           ? contacts.map((contact, i) => (
             <div key={i}>
             {/* Wrap each ContactCard with Link and use passHref */}
-            <Link href="/individualContact" passHref>
+            <Link href={`/individualContact/${i}`} passHref>
               <ContactCard
                 as="a" // specify 'a' as the 'as' prop
                 href={`/individualContact/${i}`}
