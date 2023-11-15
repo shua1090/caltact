@@ -50,7 +50,8 @@ export default function AddPage () {
     linkedin: '',
     discord: '',
     github: '',
-    spotify: ''
+    spotify: '',
+    important: false
   })
 
   const router = useRouter()
@@ -87,7 +88,7 @@ export default function AddPage () {
   }
 
   function handleChange (event: FormEvent) {
-    const { name, value } = event.target as HTMLFormElement
+    const { name, value, checked } = event.target as HTMLFormElement
     switch (name) {
       case 'file-upload': {
         setContact({ ...contact, photo: value.files[0] })
@@ -172,6 +173,10 @@ export default function AddPage () {
       }
       case 'spotify': {
         setContact({ ...contact, spotify: value })
+        break
+      }
+      case 'check-important': {
+        setContact({ ...contact, important: checked })
         break
       }
     }
@@ -538,6 +543,22 @@ export default function AddPage () {
                   />
                 </div>
               </div>
+            </div>
+
+            <div className="flex items-center mb-4 border-b border-gray-900/10 pb-12">
+                <input
+                  id="check-important"
+                  name="check-important"
+                  type="checkbox"
+                  className='w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                  value={contact.important.toString()}
+                  onChange={handleChange}
+                />
+                <label
+                  htmlFor="check-important"
+                  className="w-full py-4 ms-2 text-base font-medium text-gray-900 dark:text-gray-300">
+                    Mark contact as important
+                </label>
             </div>
 
             <div className="border-b border-gray-900/10 pb-12">
