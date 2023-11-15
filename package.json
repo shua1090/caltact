@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "npx eslint --ext .ts,.tsx ./app ./components ./pages ./database",
+    "test": "echo \"Error: no test specified\""
   },
   "dependencies": {
     "@2toad/profanity": "^2.2.0",
