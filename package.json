@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "npx eslint ./app ./components ./pages ./database --ext .ts,.tsx",
+    "lint": "npx eslint --ext .ts,.tsx ./app ./components ./pages ./database",
     "test": "echo \"Error: no test specified\""
   },
   "dependencies": {
