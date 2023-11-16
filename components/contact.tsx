@@ -51,7 +51,7 @@ export default function ContactCard ({
         <img
           src={photo}
           alt="Profile Image"
-          className="rounded-2xl h-24 w-24"
+          className="rounded-2xl h-24 w-24 object-cover"
         />
         <h1 className="font-bold mt-1 text-gray-800">
           {firstName ?? 'N/A'} {lastName ?? 'N/A'}

@@ -7,8 +7,8 @@ import { type FormEvent, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-async function postPFP (image: File) {
-  // const token = localStorage.getItem('token')
+async function postPFP (image: File | undefined) {
+  const token = localStorage.getItem('token')
   const body = new FormData()
 
   let email = localStorage.getItem('email')
@@ -17,8 +17,10 @@ async function postPFP (image: File) {
   }
 
   body.append('email', email)
-  body.append('file', image)
-  const token = localStorage.getItem('token')
+  if (image) {
+    body.append('file', image)
+  }
+
   const promise = fetch('/api/uploadPhoto', {
     method: 'POST',
     headers: {
@@ -53,6 +55,7 @@ export default function AddPage () {
   }, [])
 
   const [contact, setContact] = useState({
+    photo: '',
     college: '',
     major: '',
     firstName: '',
@@ -89,40 +92,42 @@ export default function AddPage () {
 
     console.log(imageFile)
 
-    if (imageFile) {
-      console.log('hello')
-      postPFP(imageFile)
-        .then(async (res: Response) => {
-          if (res.status === 201) {
-            return await res.json()
-          }
-        })
-        .catch((error: Error) => {
-          console.log(error)
-        })
-    }
-
-    postContact(contact)
+    postPFP(imageFile)
       .then(async (res: Response) => {
         if (res.status === 201) {
           return await res.json()
-        } else if (res.status === 401) {
-          alert('Authorization failed.')
-          return undefined
-        } else if (res.status === 403) {
-          alert(`Bad word: ${await res.json().then((js) => js.message)}`)
-        } else {
-          return undefined
         }
       })
       .then((res) => {
-        // redirect to user home page
-        if (res !== undefined) {
-          alert('Contact added successfully!')
-        } else {
-          alert('Contact could not be added.')
+        let contactToAdd = contact
+        if (res) {
+          contactToAdd = { ...contactToAdd, photo: res.url as string }
         }
-        void router.push('/')
+        postContact(contactToAdd)
+          .then(async (res: Response) => {
+            if (res.status === 201) {
+              return await res.json()
+            } else if (res.status === 401) {
+              alert('Authorization failed.')
+              return undefined
+            } else if (res.status === 403) {
+              alert(`Bad word: ${await res.json().then((js) => js.message)}`)
+            } else {
+              return undefined
+            }
+          })
+          .then((res) => {
+            // redirect to user home page
+            if (res !== undefined) {
+              alert('Contact added successfully!')
+            } else {
+              alert('Contact could not be added.')
+            }
+            void router.push('/')
+          })
+          .catch((error: Error) => {
+            console.log(error)
+          })
       })
       .catch((error: Error) => {
         console.log(error)
@@ -256,9 +261,10 @@ export default function AddPage () {
                   <div className="mt-2 flex items-center gap-x-3">
                     <Image
                       src={imageFile ? URL.createObjectURL(imageFile) : pfp}
-                      width="50"
-                      height="50"
+                      width="48"
+                      height="48"
                       alt="upload profile picture preview"
+                      className = "rounded-full object-cover w-12 h-12"
                     />
                     <label
                       htmlFor="file-upload"
@@ -603,7 +609,7 @@ export default function AddPage () {
                 />
                 <label
                   htmlFor="check-important"
-                  className="w-full py-4 ms-2 text-base font-medium text-gray-900 dark:text-gray-300">
+                  className="w-full py-4 ms-2 text-base font-medium text-gray-900">
                     Mark contact as important
                 </label>
             </div>

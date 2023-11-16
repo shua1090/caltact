@@ -1,9 +1,9 @@
 import { type NextApiRequest, type NextApiResponse } from 'next'
 import photoManager from '../../database/PhotoManager'
-import verifyUser from './utils/verifyUser'
 import multiparty from 'multiparty'
 import { readFile } from 'fs/promises'
-import type RequestFile from 'requestfile.ts'
+import verifyUser from './utils/verifyUser'
+import type RequestFile from './types/requestfile.ts'
 
 export const config = {
   api: {
@@ -32,31 +32,17 @@ export default async function handler (
     })
   })
 
-  let authorization = req.headers.authorization
-  if (!authorization) {
-    authorization = ''
-  }
-
   // authenticate user
 
-  fetch('api/verifyUser', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization
-    },
-    body: JSON.stringify({ email: data.fields.email[0] })
-  })
-    .then((response) => {
-      if (response) {
-        console.log('Verified user')
-      } else {
-        res.status(401).json({ message: 'Invalid token' })
-      }
-    })
-    .catch((error) => {
-      console.log('error: ', error)
-    })
+  // if ((await verifyUser(req))) {
+  //   console.log('Verified user')
+  // } else {
+  //   res.status(401).json({ message: 'Invalid token' }); return
+  // }
+
+  // if (!data.files) {
+  //   res.status(201).json({ url: '' })
+  // }
 
   const file = data.files.file[0] as RequestFile
 
@@ -64,10 +50,22 @@ export default async function handler (
 
   readFile(file.path)
     .then(async (contents) => {
-      console.log(contents)
       await photoManager.uploadPhoto(contents, '', file)
+        .then(async (path) => {
+          await photoManager.getPhotoURL(path)
+            .then((url) => {
+              console.log(url)
+              res.status(201).json({ url })
+            })
+            .catch((error) => {
+              console.log('url error: ', error)
+            })
+        })
+        .catch((error) => {
+          console.log('upload error: ', error)
+        })
     })
     .catch((error) => {
-      console.log(error)
+      console.log('readfile error: ', error)
     })
 }

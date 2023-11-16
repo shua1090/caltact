@@ -1,6 +1,6 @@
 export default interface RequestFile {
   fieldname: string
-  originalname: string
+  originalFilename: string
   path: string
   headers: {
     'content-disposition': string

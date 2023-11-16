@@ -1,6 +1,6 @@
 import { storage } from './index'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import type RequestFile from 'requestfile.ts'
+import type RequestFile from '../pages/api/types/requestfile.ts'
 
 class PhotoManager {
   async uploadPhoto (file: Buffer, id: string, metadata: RequestFile) {
@@ -21,11 +21,14 @@ class PhotoManager {
         return null
       })
 
+    return path
+  }
+
+  async getPhotoURL (path: string) {
     const pathReference = ref(storage, path)
 
     const url = await getDownloadURL(pathReference)
       .then((url) => {
-        console.log('url: ', url)
         return url
       })
       .catch((error) => {
