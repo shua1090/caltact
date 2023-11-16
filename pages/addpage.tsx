@@ -41,6 +41,10 @@ async function postContact (contact: Record<string, unknown>, image: File | unde
 
 export default function AddPage () {
   const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const [contact, setContact] = useState({
     college: '',
     major: '',
@@ -61,15 +65,12 @@ export default function AddPage () {
     linkedin: '',
     discord: '',
     github: '',
-    spotify: ''
+    spotify: '',
+    important: false
   })
   const [imageFile, setImageFile] = useState<File>()
 
   const router = useRouter()
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
 
   if (!isClient) {
     return null // or return a loader, placeholder, etc.
@@ -115,7 +116,7 @@ export default function AddPage () {
   }
 
   function handleChange (event: FormEvent) {
-    const { name, value } = event.target as HTMLInputElement
+    const { name, value, checked } = event.target as HTMLFormElement
     switch (name) {
       case 'college': {
         setContact({ ...contact, college: value })
@@ -198,10 +199,14 @@ export default function AddPage () {
         setContact({ ...contact, spotify: value })
         break
       }
+      case 'check-important': {
+        setContact({ ...contact, important: checked })
+        break
+      }
     }
   }
 
-  if (localStorage.getItem('token') === null) {
+  if (isClient && localStorage.getItem('token') === null) {
     void router.push('/signin')
     return <div></div>
   }
@@ -563,6 +568,22 @@ export default function AddPage () {
                   />
                 </div>
               </div>
+            </div>
+
+            <div className="flex items-center mb-4 border-b border-gray-900/10 pb-12">
+                <input
+                  id="check-important"
+                  name="check-important"
+                  type="checkbox"
+                  className='w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                  value={contact.important.toString()}
+                  onChange={handleChange}
+                />
+                <label
+                  htmlFor="check-important"
+                  className="w-full py-4 ms-2 text-base font-medium text-gray-900 dark:text-gray-300">
+                    Mark contact as important
+                </label>
             </div>
 
             <div className="border-b border-gray-900/10 pb-12">

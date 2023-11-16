@@ -7,7 +7,8 @@ import './index.css'
 import ContactCard from '@/components/contact'
 import { set } from 'firebase/database'
 
-async function fetchContacts (setContacts: any, search: string | undefined, important: boolean | undefined) {
+async function fetchContacts (setIsLoading: any, setContacts: any, search: string | undefined, important: boolean | undefined) {
+  setIsLoading(true)
   const response = await fetch('/api/getContacts', {
     method: 'POST',
     headers: {
@@ -23,6 +24,7 @@ async function fetchContacts (setContacts: any, search: string | undefined, impo
   try {
     const data = await response.json()
     setContacts(data.contacts)
+    setIsLoading(false)
   } catch (e) {
     // Redirect user to login page
     window.location.href = '/signin'
@@ -43,7 +45,7 @@ export default function Index () {
 
   useEffect(() => {
     if (refetch && isClient) {
-      void fetchContacts(setContacts, search === '' ? undefined : search, important)
+      void fetchContacts(setIsLoading, setContacts, search === '' ? undefined : search, important)
       setRefetch(false)
     }
   }, [refetch, isClient])
@@ -54,8 +56,8 @@ export default function Index () {
   return (
     <main className="min-h-screen bg-white">
       <Header />
-      <div className="px-10">
-        <div className="flex flex-row gap-6 items-center">
+      <div className="px-10 w-screen">
+        <div className="flex flex-row gap-6 items-center w-full">
           <input
             className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
             type="text"
@@ -87,8 +89,8 @@ export default function Index () {
             Search
           </button>
         </div>
-        <div className='contacts gap-2 mt-10'>
-        {contacts
+        <div className='contacts gap-2 mt-10 w-screen'>
+        {!isLoading && contacts
           ? contacts.map((contact, i) => (
           <div key={i}>
             <ContactCard
@@ -98,10 +100,14 @@ export default function Index () {
               phoneNumber={contact.phoneNumber ?? ''}
               index={i}
               email={contact.email ?? ''}
+              setIsLoading={setIsLoading}
             />
           </div>
           ))
-          : <div className="text-center text-lg font-light">Please login or add more contacts</div>}
+          : (!isLoading && <div className="text-center text-lg font-light">Please login or add more contacts</div>)}
+          {
+            isLoading && <div className='w-screen flex flex-row items-center justify-center'><div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900 mx-auto text-center mt-20"></div></div>
+          }
         </div>
       </div>
     </main>
