@@ -1,7 +1,6 @@
 import { type NextApiRequest, type NextApiResponse } from 'next'
 import contactManager from '../../database/ContactManager'
 import userManager from '../../database/index'
-import photoManager from '../../database/PhotoManager'
 import { profanity } from '@2toad/profanity'
 import verifyUser from './utils/verifyUser'
 import fillContact from './utils/fillContact'

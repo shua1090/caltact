@@ -7,23 +7,30 @@ import { type FormEvent, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-// async function postPFP(image: File | undefined) {
-//   const token = localStorage.getItem('token')
-//   const promise = fetch('/api/addContact', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       authorization: 'Bearer ' + token
-//     },
-//     body: JSON.stringify({
-//       email: localStorage.getItem('email'),
-//       photo: image
-//     })
-//   })
-//   return await promise
-// }
+async function postPFP (image: File) {
+  // const token = localStorage.getItem('token')
+  const body = new FormData()
 
-async function postContact (contact: Record<string, unknown>, image: File | undefined) {
+  let email = localStorage.getItem('email')
+  if (email === null) {
+    email = ''
+  }
+
+  body.append('email', email)
+  body.append('file', image)
+  const token = localStorage.getItem('token')
+  const promise = fetch('/api/uploadPhoto', {
+    method: 'POST',
+    headers: {
+      authorization: 'Bearer ' + token
+    },
+    body
+  })
+
+  return await promise
+}
+
+async function postContact (contact: Record<string, unknown>) {
   const token = localStorage.getItem('token')
   const promise = fetch('/api/addContact', {
     method: 'POST',
@@ -80,7 +87,22 @@ export default function AddPage () {
     /* handle form submission */
     event.preventDefault()
 
-    postContact(contact, imageFile)
+    console.log(imageFile)
+
+    if (imageFile) {
+      console.log('hello')
+      postPFP(imageFile)
+        .then(async (res: Response) => {
+          if (res.status === 201) {
+            return await res.json()
+          }
+        })
+        .catch((error: Error) => {
+          console.log(error)
+        })
+    }
+
+    postContact(contact)
       .then(async (res: Response) => {
         if (res.status === 201) {
           return await res.json()
