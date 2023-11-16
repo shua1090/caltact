@@ -3,7 +3,7 @@ import photoManager from '../../database/PhotoManager'
 import multiparty from 'multiparty'
 import { readFile } from 'fs/promises'
 // import verifyUser from './utils/verifyUser'
-import type RequestFile from './types/requestfile.ts'
+import type ReqFormData from './types/reqformdata'
 
 export const config = {
   api: {
@@ -44,7 +44,14 @@ export default async function handler (
   //   res.status(201).json({ url: '' })
   // }
 
-  const file = data.files.file[0] as RequestFile
+  if (data instanceof Error) {
+    console.log('error: ', data)
+    res.status(500).json({ message: 'Error uploading photo' })
+  }
+
+  const resolvedData = data as ReqFormData
+
+  const file = resolvedData.files.file[0]
 
   console.log(file)
 
