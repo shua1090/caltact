@@ -2,7 +2,7 @@ import { type NextApiRequest, type NextApiResponse } from 'next'
 import photoManager from '../../database/PhotoManager'
 import multiparty from 'multiparty'
 import { readFile } from 'fs/promises'
-import verifyUser from './utils/verifyUser'
+// import verifyUser from './utils/verifyUser'
 import type RequestFile from './types/requestfile.ts'
 
 export const config = {
