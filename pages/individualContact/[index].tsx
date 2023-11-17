@@ -8,12 +8,11 @@ import '.././index.css'
 const DynamicContactPage = () => {
   const router = useRouter()
   const { index } = router.query
-  const [userData, setUserData] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [userData, setUserData] = useState<contact | null>(null)
+  const [, setIsLoading] = useState<boolean | null>(true)
   const [search, setSearch] = useState('') // Define the search state
   const [important, setImportant] = useState(false) // Define the important state
-  const [refetch, setRefetch] = useState<boolean>(true)
-  const [contacts, setContacts] = useState<contact[]>([])
+  const [, setRefetch] = useState<boolean>(true)
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -50,7 +49,7 @@ const DynamicContactPage = () => {
     }
 
     if (index) {
-      fetchUserData()
+      void fetchUserData()
     }
   }, [index])
 
