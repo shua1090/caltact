@@ -5,8 +5,6 @@ import Header from '@/components/header'
 import type contact from './api/types/contact'
 import './index.css'
 import ContactCard from '@/components/contact'
-import { set } from 'firebase/database'
-import Link from 'next/link'
 
 async function fetchContacts (
   setIsLoading: any,
@@ -28,6 +26,10 @@ async function fetchContacts (
     })
   })
   try {
+    if (response.status !== 200) {
+      window.location.href = '/signin'
+      return
+    }
     const data = await response.json()
     setContacts(data.contacts)
     setIsLoading(false)
