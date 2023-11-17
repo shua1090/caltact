@@ -7,6 +7,31 @@ import { type FormEvent, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
+async function postPFP (image: File | undefined) {
+  const token = localStorage.getItem('token')
+  const body = new FormData()
+
+  let email = localStorage.getItem('email')
+  if (email === null) {
+    email = ''
+  }
+
+  body.append('email', email)
+  if (image) {
+    body.append('file', image)
+  }
+
+  const promise = fetch('/api/uploadPhoto', {
+    method: 'POST',
+    headers: {
+      authorization: 'Bearer ' + token
+    },
+    body
+  })
+
+  return await promise
+}
+
 async function postContact (contact: Record<string, unknown>) {
   const token = localStorage.getItem('token')
   const promise = fetch('/api/addContact', {
@@ -50,52 +75,79 @@ export default function AddPage () {
     linkedin: '',
     discord: '',
     github: '',
-    spotify: ''
+    spotify: '',
+    important: false
   })
+  const [imageFile, setImageFile] = useState<File>()
 
   const router = useRouter()
+
+  if (!isClient) {
+    return null // or return a loader, placeholder, etc.
+  }
 
   function handleSubmit (event: FormEvent) {
     /* handle form submission */
     event.preventDefault()
 
-    postContact(contact)
+    console.log(imageFile)
+
+    postPFP(imageFile)
       .then(async (res: Response) => {
         if (res.status === 201) {
           return await res.json()
-        } else if (res.status === 401) {
-          alert('Authorization failed.')
-          return undefined
-        } else if (res.status === 403) {
-          alert(`Bad word: ${await res.json().then((js) => js.message)}`)
-        } else {
-          return undefined
         }
       })
       .then((res) => {
-        // redirect to user home page
-        if (res !== undefined) {
-          alert('Contact added successfully!')
-        } else {
-          alert('Contact could not be added.')
+        let contactToAdd = contact
+        if (res) {
+          contactToAdd = { ...contactToAdd, photo: res.url as string }
         }
-        void router.push('/')
+        postContact(contactToAdd)
+          .then(async (res: Response) => {
+            if (res.status === 201) {
+              return await res.json()
+            } else if (res.status === 401) {
+              alert('Authorization failed.')
+              return undefined
+            } else if (res.status === 403) {
+              alert(`Bad word: ${await res.json().then((js) => js.message)}`)
+            } else {
+              return undefined
+            }
+          })
+          .then((res) => {
+            // redirect to user home page
+            if (res !== undefined) {
+              alert('Contact added successfully!')
+            } else {
+              alert('Contact could not be added.')
+            }
+            void router.push('/')
+          })
+          .catch((error: Error) => {
+            console.log(error)
+          })
       })
       .catch((error: Error) => {
         console.log(error)
       })
   }
 
+  function handleFileChange (event: FormEvent) {
+    const value = event.target as HTMLInputElement
+    if (value.files) {
+      setImageFile(value.files[0])
+      console.log(value.files[0])
+    }
+  }
+
   function handleChange (event: FormEvent) {
-    const { name, value } = event.target as HTMLFormElement
+    const { name, value, checked } = event.target as HTMLFormElement
     switch (name) {
-      case 'file-upload': {
-        setContact({ ...contact, photo: value.files[0] })
-        console.log(contact.photo)
-        break
-      }
       case 'college': {
         setContact({ ...contact, college: value })
+        console.log(value)
         break
       }
       case 'major': {
@@ -174,6 +226,10 @@ export default function AddPage () {
         setContact({ ...contact, spotify: value })
         break
       }
+      case 'check-important': {
+        setContact({ ...contact, important: checked })
+        break
+      }
     }
   }
 
@@ -204,10 +260,11 @@ export default function AddPage () {
                   </div>
                   <div className="mt-2 flex items-center gap-x-3">
                     <Image
-                      src={contact.photo ? contact.photo : pfp}
-                      width="50"
-                      height="50"
+                      src={imageFile ? URL.createObjectURL(imageFile) : pfp}
+                      width="48"
+                      height="48"
                       alt="upload profile picture preview"
+                      className = "rounded-full object-cover w-12 h-12"
                     />
                     <label
                       htmlFor="file-upload"
@@ -220,6 +277,7 @@ export default function AddPage () {
                       name="file-upload"
                       type="file"
                       className="sr-only"
+                      onChange={handleFileChange}
                     />
                   </div>
                 </div>
@@ -538,6 +596,22 @@ export default function AddPage () {
                   />
                 </div>
               </div>
+            </div>
+
+            <div className="flex items-center mb-4 border-b border-gray-900/10 pb-12">
+                <input
+                  id="check-important"
+                  name="check-important"
+                  type="checkbox"
+                  className='w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                  value={contact.important.toString()}
+                  onChange={handleChange}
+                />
+                <label
+                  htmlFor="check-important"
+                  className="w-full py-4 ms-2 text-base font-medium text-gray-900">
+                    Mark contact as important
+                </label>
             </div>
 
             <div className="border-b border-gray-900/10 pb-12">

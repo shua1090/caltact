@@ -1,62 +1,61 @@
-import "../../app/globals.css";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import Header from "@/components/header";
-import type contact from ".././api/types/contact";
-import ".././index.css";
+import '../../app/globals.css'
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import Header from '@/components/header'
+import type contact from '.././api/types/contact'
+import '.././index.css'
 
 const DynamicContactPage = () => {
-  const router = useRouter();
-  const { index } = router.query;
-  const [userData, setUserData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState(""); // Define the search state
-  const [important, setImportant] = useState(false); // Define the important state
-  const [refetch, setRefetch] = useState<boolean>(true);
-  const [contacts, setContacts] = useState<contact[]>([]);
+  const router = useRouter()
+  const { index } = router.query
+  const [userData, setUserData] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [search, setSearch] = useState('') // Define the search state
+  const [important, setImportant] = useState(false) // Define the important state
+  const [refetch, setRefetch] = useState<boolean>(true)
+  const [contacts, setContacts] = useState<contact[]>([])
 
   useEffect(() => {
     const fetchUserData = async () => {
-      setIsLoading(true);
+      setIsLoading(true)
 
       try {
-        const response = await fetch("/api/getContacts", {
-          method: "POST",
+        const response = await fetch('/api/getContacts', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify({
-            email: localStorage.getItem("email"),
-            index,
-          }),
-        });
+            email: localStorage.getItem('email'),
+            index
+          })
+        })
 
         if (response.ok) {
-          const data = await response.json();
-          setUserData(data.contacts);
+          const data = await response.json()
+          setUserData(data.contacts)
         } else if (response.status === 401) {
           // Unauthorized, redirect user to login page
-          window.location.href = "/signin";
+          window.location.href = '/signin'
         } else {
           // Handle other error cases as needed
-          console.error("Failed to fetch user:", response.statusText);
+          console.error('Failed to fetch user:', response.statusText)
         }
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error('Error fetching user:', error)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
+    }
 
     if (index) {
-      fetchUserData();
+      fetchUserData()
     }
-  }, [index]);
+  }, [index])
 
-  function fetchNewContacts() {
-    setRefetch(true);
+  function fetchNewContacts () {
+    setRefetch(true)
   }
 
   return (
@@ -70,21 +69,21 @@ const DynamicContactPage = () => {
             placeholder="Search"
             value={search}
             onChange={(e) => {
-              setSearch(e.target.value);
+              setSearch(e.target.value)
             }}
           />
           <span className="text-gray-500 flex flex-row gap-2">
-            Important{" "}
+            Important{' '}
             <input
               type="checkbox"
               className="text-black"
               style={{
-                width: "1.5rem",
-                height: "1.5rem",
+                width: '1.5rem',
+                height: '1.5rem'
               }}
               value={important.toString()}
               onChange={(e) => {
-                setImportant(e.target.checked);
+                setImportant(e.target.checked)
               }}
             />
           </span>
@@ -100,14 +99,16 @@ const DynamicContactPage = () => {
           {/* Left div for picture and user name */}
           <div className="flex-shrink-0 w-1/2">
             <img
-              src={userData?.photo ?? ""}
+              src={userData?.photo ?? ''}
               alt="Profile"
-              className="mb-4 rounded-full border-2 border-gray-300 w-96 h-96 mx-auto"
+              width="96"
+              height="96"
+              className="mb-4 rounded-full border-3 border-gray-300 object-cover w-96 h-96 mx-auto "
             />
-            <h1 className="text-2xl font-bold text-center">
+            <h1 className="text-2xl text-black font-bold text-center ">
               {userData
                 ? `${userData.firstName} ${userData.lastName}`
-                : "Loading..."}
+                : 'Loading...'}
             </h1>
           </div>
 
@@ -178,7 +179,7 @@ const DynamicContactPage = () => {
         </div>
       </div>
     </main>
-  );
-};
+  )
+}
 
-export default DynamicContactPage;
+export default DynamicContactPage
