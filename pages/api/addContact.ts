@@ -38,6 +38,8 @@ export default async function handler (
     let userid: string
     if (user?.id !== undefined) {
       userid = user.id
+      // upload photo, get download link to add to database
+      // await photoManager.uploadPhoto(req.body.photo, `${userid}`)
       // Gets the contact we just added in and sends it back
       await contactManager.addContact(userid, contactToAdd)
       res.status(201).json({

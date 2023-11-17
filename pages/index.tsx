@@ -5,9 +5,13 @@ import Header from '@/components/header'
 import type contact from './api/types/contact'
 import './index.css'
 import ContactCard from '@/components/contact'
-import { set } from 'firebase/database'
 
-async function fetchContacts (setIsLoading: any, setContacts: any, search: string | undefined, important: boolean | undefined) {
+async function fetchContacts (
+  setIsLoading: any,
+  setContacts: any,
+  search: string | undefined,
+  important: boolean | undefined
+) {
   setIsLoading(true)
   const response = await fetch('/api/getContacts', {
     method: 'POST',
@@ -22,6 +26,10 @@ async function fetchContacts (setIsLoading: any, setContacts: any, search: strin
     })
   })
   try {
+    if (response.status !== 200) {
+      window.location.href = '/signin'
+      return
+    }
     const data = await response.json()
     setContacts(data.contacts)
     setIsLoading(false)
@@ -45,7 +53,12 @@ export default function Index () {
 
   useEffect(() => {
     if (refetch && isClient) {
-      void fetchContacts(setIsLoading, setContacts, search === '' ? undefined : search, important)
+      void fetchContacts(
+        setIsLoading,
+        setContacts,
+        search === '' ? undefined : search,
+        important
+      )
       setRefetch(false)
     }
   }, [refetch, isClient])
@@ -89,25 +102,31 @@ export default function Index () {
             Search
           </button>
         </div>
-        <div className='contacts gap-2 mt-10 w-screen'>
-        {!isLoading && contacts
-          ? contacts.map((contact, i) => (
-          <div key={i}>
-            <ContactCard
-              photo={contact.photo ?? ''}
-              firstName={contact.firstName ?? undefined}
-              lastName={contact.lastName ?? undefined}
-              phoneNumber={contact.phoneNumber ?? ''}
-              index={i}
-              email={contact.email ?? ''}
-              setIsLoading={setIsLoading}
-            />
-          </div>
-          ))
-          : (!isLoading && <div className="text-center text-lg font-light">Please login or add more contacts</div>)}
-          {
-            isLoading && <div className='w-screen flex flex-row items-center justify-center'><div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900 mx-auto text-center mt-20"></div></div>
-          }
+        <div className="contacts gap-2 mt-10 w-screen">
+          {!isLoading && contacts
+            ? contacts.map((contact, i) => (
+                <div key={i}>
+                  <ContactCard
+                    photo={contact.photo ?? ''}
+                    firstName={contact.firstName ?? undefined}
+                    lastName={contact.lastName ?? undefined}
+                    phoneNumber={contact.phoneNumber ?? ''}
+                    index={i}
+                    email={contact.email ?? ''}
+                    setIsLoading={setIsLoading}
+                  />
+                </div>
+            ))
+            : !isLoading && (
+                <div className="text-center text-lg font-light">
+                  Please login or add more contacts
+                </div>
+              )}
+          {isLoading && (
+            <div className="w-screen flex flex-row items-center justify-center">
+              <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900 mx-auto text-center mt-20"></div>
+            </div>
+          )}
         </div>
       </div>
     </main>
