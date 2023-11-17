@@ -3,7 +3,7 @@
 import React from "react";
 import { Phone, Mail, Delete } from "lucide-react";
 import { useRouter } from "next/router";
-import NextLink from 'next/link';
+import NextLink from "next/link";
 
 interface DataInterface {
   photo: string | undefined;
@@ -86,9 +86,7 @@ export default function ContactCard({
                 <Mail className="text-indigo-800 mt-2" size={22} />
               </div>
               <div className="font-medium m-2">
-                <a href="mailto:evcao@calpoly.edu">
-                  {email || "No email provided"}
-                </a>
+                <a href={`mailto:${email}`}>{email || "No email provided"}</a>
               </div>
             </div>
           </div>
