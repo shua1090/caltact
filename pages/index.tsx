@@ -1,57 +1,68 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { use, useEffect, useState } from 'react'
-import '../app/globals.css'
-import Header from '@/components/header'
-import type contact from './api/types/contact'
-import './index.css'
-import ContactCard from '@/components/contact'
-import { set } from 'firebase/database'
+import { use, useEffect, useState } from "react";
+import "../app/globals.css";
+import Header from "@/components/header";
+import type contact from "./api/types/contact";
+import "./index.css";
+import ContactCard from "@/components/contact";
+import { set } from "firebase/database";
+import Link from "next/link";
 
-async function fetchContacts (setIsLoading: any, setContacts: any, search: string | undefined, important: boolean | undefined) {
-  setIsLoading(true)
-  const response = await fetch('/api/getContacts', {
-    method: 'POST',
+async function fetchContacts(
+  setIsLoading: any,
+  setContacts: any,
+  search: string | undefined,
+  important: boolean | undefined
+) {
+  setIsLoading(true);
+  const response = await fetch("/api/getContacts", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('token')}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify({
-      email: localStorage.getItem('email'),
+      email: localStorage.getItem("email"),
       search,
-      important
-    })
-  })
+      important,
+    }),
+  });
   try {
-    const data = await response.json()
-    setContacts(data.contacts)
-    setIsLoading(false)
+    const data = await response.json();
+    setContacts(data.contacts);
+    setIsLoading(false);
   } catch (e) {
     // Redirect user to login page
-    window.location.href = '/signin'
+    window.location.href = "/signin";
   }
 }
 
-export default function Index () {
-  const [isClient, setIsClient] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+export default function Index() {
+  const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    setIsClient(true);
+  }, []);
 
-  const [search, setSearch] = useState<string>('')
-  const [important, setImportant] = useState<boolean>(false)
-  const [refetch, setRefetch] = useState<boolean>(true)
-  const [contacts, setContacts] = useState<contact[]>([])
+  const [search, setSearch] = useState<string>("");
+  const [important, setImportant] = useState<boolean>(false);
+  const [refetch, setRefetch] = useState<boolean>(true);
+  const [contacts, setContacts] = useState<contact[]>([]);
 
   useEffect(() => {
     if (refetch && isClient) {
-      void fetchContacts(setIsLoading, setContacts, search === '' ? undefined : search, important)
-      setRefetch(false)
+      void fetchContacts(
+        setIsLoading,
+        setContacts,
+        search === "" ? undefined : search,
+        important
+      );
+      setRefetch(false);
     }
-  }, [refetch, isClient])
+  }, [refetch, isClient]);
 
-  function fetchNewContacts () {
-    setRefetch(true)
+  function fetchNewContacts() {
+    setRefetch(true);
   }
   return (
     <main className="min-h-screen bg-white">
@@ -64,21 +75,21 @@ export default function Index () {
             placeholder="Search"
             value={search}
             onChange={(e) => {
-              setSearch(e.target.value)
+              setSearch(e.target.value);
             }}
           />
           <span className="text-gray-500 flex flex-row gap-2">
-            Important{' '}
+            Important{" "}
             <input
               type="checkbox"
               className="text-black"
               style={{
-                width: '1.5rem',
-                height: '1.5rem'
+                width: "1.5rem",
+                height: "1.5rem",
               }}
               value={important.toString()}
               onChange={(e) => {
-                setImportant(e.target.checked)
+                setImportant(e.target.checked);
               }}
             />
           </span>
@@ -89,27 +100,35 @@ export default function Index () {
             Search
           </button>
         </div>
-        <div className='contacts gap-2 mt-10 w-screen'>
-        {!isLoading && contacts
-          ? contacts.map((contact, i) => (
-          <div key={i}>
-            <ContactCard
-              photo={contact.photo ?? ''}
-              firstName={contact.firstName ?? undefined}
-              lastName={contact.lastName ?? undefined}
-              phoneNumber={contact.phoneNumber ?? ''}
-              index={i}
-              email={contact.email ?? ''}
-              setIsLoading={setIsLoading}
-            />
-          </div>
-          ))
-          : (!isLoading && <div className="text-center text-lg font-light">Please login or add more contacts</div>)}
-          {
-            isLoading && <div className='w-screen flex flex-row items-center justify-center'><div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900 mx-auto text-center mt-20"></div></div>
-          }
+        <div className="contacts gap-2 mt-10 w-screen">
+          {!isLoading && contacts
+            ? contacts.map((contact, i) => (
+                <div key={i}>
+                  <ContactCard
+                    as="a" // specify 'a' as the 'as' prop
+                    href={`/individualContact/${i}`}
+                    photo={contact.photo ?? ""}
+                    firstName={contact.firstName ?? undefined}
+                    lastName={contact.lastName ?? undefined}
+                    phoneNumber={contact.phoneNumber ?? ""}
+                    index={i}
+                    email={contact.email ?? ""}
+                    setIsLoading={setIsLoading}
+                  />
+                </div>
+              ))
+            : !isLoading && (
+                <div className="text-center text-lg font-light">
+                  Please login or add more contacts
+                </div>
+              )}
+          {isLoading && (
+            <div className="w-screen flex flex-row items-center justify-center">
+              <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900 mx-auto text-center mt-20"></div>
+            </div>
+          )}
         </div>
       </div>
     </main>
-  )
+  );
 }
