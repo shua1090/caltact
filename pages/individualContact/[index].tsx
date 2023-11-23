@@ -57,6 +57,12 @@ const DynamicContactPage = () => {
     setRefetch(true)
   }
 
+  function redirectToEdit () {
+    if (index) {
+      void router.push(`/updatepage?index=${index[0]}`)
+    }
+  }
+
   return (
     <main className="min-h-screen bg-white">
       <Header />
@@ -172,6 +178,9 @@ const DynamicContactPage = () => {
                     Spotify: {userData.spotify}
                   </p>
                 </div>
+
+                {/* edit button */}
+                <button onClick = {redirectToEdit} className="text-gray-700">Edit Contact</button>
               </>
             )}
           </div>

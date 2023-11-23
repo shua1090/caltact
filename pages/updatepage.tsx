@@ -6,8 +6,9 @@ import pfp from '../public/pfp.png'
 import { type FormEvent, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import type contact from './api/types/contact'
 
-async function postPFP (image: File | undefined) {
+async function updatePFP (image: File | undefined) {
   const token = localStorage.getItem('token')
   const body = new FormData()
 
@@ -32,9 +33,9 @@ async function postPFP (image: File | undefined) {
   return await promise
 }
 
-async function postContact (contact: Record<string, unknown>) {
+async function updateContact (contact: contact) {
   const token = localStorage.getItem('token')
-  const promise = fetch('/api/addContact', {
+  const promise = fetch('/api/updateContact', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -48,39 +49,79 @@ async function postContact (contact: Record<string, unknown>) {
   return await promise
 }
 
-export default function AddPage () {
+export default function UpdatePage () {
+  const router = useRouter()
   const [isClient, setIsClient] = useState(false)
+  const [contact, setContact] = useState<contact>(
+    {
+      photo: '',
+      college: '',
+      major: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      birthday: '',
+      country: '',
+      street: '',
+      city: '',
+      region: '',
+      postalCode: '',
+      facebook: '',
+      instagram: '',
+      snapchat: '',
+      twitter: '',
+      linkedin: '',
+      discord: '',
+      github: '',
+      spotify: '',
+      important: false
+    }
+  )
+  const [, setIsLoading] = useState<boolean | null>(true)
+  const { index } = router.query
+
   useEffect(() => {
     setIsClient(true)
-  }, [])
+    const fetchUserData = async () => {
+      setIsLoading(true)
 
-  const [contact, setContact] = useState({
-    photo: '',
-    college: '',
-    major: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
-    birthday: '',
-    country: '',
-    street: '',
-    city: '',
-    region: '',
-    postalCode: '',
-    facebook: '',
-    instagram: '',
-    snapchat: '',
-    twitter: '',
-    linkedin: '',
-    discord: '',
-    github: '',
-    spotify: '',
-    important: false
-  })
+      try {
+        const response = await fetch('/api/getContacts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({
+            email: localStorage.getItem('email'),
+            index
+          })
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setContact(data.contacts)
+          console.log(data.contacts)
+        } else if (response.status === 401) {
+          // Unauthorized, redirect user to login page
+          window.location.href = '/signin'
+        } else {
+          // Handle other error cases as needed
+          console.error('Failed to fetch user:', response.statusText)
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    if (index) {
+      void fetchUserData()
+    }
+  }, [index])
+
   const [imageFile, setImageFile] = useState<File>()
-
-  const router = useRouter()
 
   if (!isClient) {
     return null // or return a loader, placeholder, etc.
@@ -93,7 +134,7 @@ export default function AddPage () {
     console.log(imageFile)
 
     if (imageFile) {
-      postPFP(imageFile)
+      updatePFP(imageFile)
         .then(async (res: Response) => {
           if (res.status === 201) {
             return await res.json()
@@ -104,9 +145,9 @@ export default function AddPage () {
           if (res) {
             contactToAdd = { ...contactToAdd, photo: res.url as string }
           }
-          postContact(contactToAdd)
+          updateContact(contactToAdd)
             .then(async (res: Response) => {
-              if (res.status === 201) {
+              if (res.status === 200) {
                 return await res.json()
               } else if (res.status === 401) {
                 alert('Authorization failed.')
@@ -118,9 +159,9 @@ export default function AddPage () {
               }
             })
             .then((res) => {
-            // redirect to user home page
+              // redirect to user home page
               if (res !== undefined) {
-                alert('Contact added successfully!')
+                alert('Contact updated successfully!')
               } else {
                 alert('Contact could not be added.')
               }
@@ -134,7 +175,7 @@ export default function AddPage () {
           console.log(error)
         })
     } else {
-      postContact(contact)
+      updateContact(contact)
         .then(async (res: Response) => {
           if (res.status === 201) {
             return await res.json()
@@ -162,16 +203,8 @@ export default function AddPage () {
     }
   }
 
-  function handleFileChange (event: FormEvent) {
-    const value = event.target as HTMLInputElement
-    if (value.files) {
-      setImageFile(value.files[0])
-      console.log(value.files[0])
-    }
-  }
-
   function handleChange (event: FormEvent) {
-    const { name, value, checked } = event.target as HTMLFormElement
+    const { name, value, checked } = event.target as HTMLInputElement
     switch (name) {
       case 'college': {
         setContact({ ...contact, college: value })
@@ -260,6 +293,14 @@ export default function AddPage () {
     }
   }
 
+  function handleFileChange (event: FormEvent) {
+    const value = event.target as HTMLInputElement
+    if (value.files) {
+      setImageFile(value.files[0])
+      console.log(value.files[0])
+    }
+  }
+
   if (isClient && localStorage.getItem('token') === null) {
     void router.push('/signin')
     return <div></div>
@@ -273,11 +314,10 @@ export default function AddPage () {
           <div className="space-y-12">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Create New Contact
+                Update Contact Information
               </h2>
               <p className="mt-1 text-sm leading-6 text-gray-600">
-                Fill out the information of the contact you would like to add
-                below.
+                Change the information of the contact you would like to update
               </p>
 
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -287,7 +327,7 @@ export default function AddPage () {
                   </div>
                   <div className="mt-2 flex items-center gap-x-3">
                     <Image
-                      src={imageFile ? URL.createObjectURL(imageFile) : pfp}
+                      src={contact.photo ? contact.photo : imageFile ? URL.createObjectURL(imageFile) : pfp}
                       width="48"
                       height="48"
                       alt="upload profile picture preview"
@@ -316,7 +356,7 @@ export default function AddPage () {
                     label="College"
                     id="college"
                     placeholder="CENG"
-                    value={contact.college}
+                    value={contact.college ? contact.college : ''}
                     changeHandler={handleChange}
                   />
                 </div>
@@ -328,7 +368,7 @@ export default function AddPage () {
                     label="Major"
                     id="major"
                     placeholder="Computer Science"
-                    value={contact.major}
+                    value={contact.major ? contact.major : ''}
                     changeHandler={handleChange}
                   />
                 </div>
@@ -356,7 +396,7 @@ export default function AddPage () {
                       type="text"
                       name="first-name"
                       id="first-name"
-                      value={contact.firstName}
+                      value={contact.firstName ? contact.firstName : ''}
                       onChange={handleChange}
                       autoComplete="given-name"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -376,7 +416,7 @@ export default function AddPage () {
                       type="text"
                       name="last-name"
                       id="last-name"
-                      value={contact.lastName}
+                      value={contact.lastName ? contact.lastName : ''}
                       onChange={handleChange}
                       autoComplete="family-name"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -396,7 +436,7 @@ export default function AddPage () {
                       id="email"
                       name="email"
                       type="email"
-                      value={contact.email}
+                      value={contact.email ? contact.email : ''}
                       onChange={handleChange}
                       autoComplete="email"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -416,7 +456,7 @@ export default function AddPage () {
                       id="phone-number"
                       name="phone-number"
                       type="text"
-                      value={contact.phoneNumber}
+                      value={contact.phoneNumber ? contact.phoneNumber : ''}
                       onChange={handleChange}
                       autoComplete="phone-number"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -436,7 +476,7 @@ export default function AddPage () {
                       id="birthday"
                       name="birthday"
                       type="date"
-                      value={contact.birthday}
+                      value={contact.birthday ? contact.birthday : ''}
                       onChange={handleChange}
                       autoComplete="birthday"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -455,7 +495,7 @@ export default function AddPage () {
                     <select
                       id="country"
                       name="country"
-                      value={contact.country}
+                      value={contact.country ? contact.country : ''}
                       onChange={handleChange}
                       autoComplete="country-name"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
@@ -479,7 +519,7 @@ export default function AddPage () {
                       type="text"
                       name="street-address"
                       id="street-address"
-                      value={contact.street}
+                      value={contact.street ? contact.street : ''}
                       onChange={handleChange}
                       autoComplete="street-address"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -499,7 +539,7 @@ export default function AddPage () {
                       type="text"
                       name="city"
                       id="city"
-                      value={contact.city}
+                      value={contact.city ? contact.city : ''}
                       onChange={handleChange}
                       autoComplete="address-level2"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -519,7 +559,7 @@ export default function AddPage () {
                       type="text"
                       name="region"
                       id="region"
-                      value={contact.region}
+                      value={contact.region ? contact.region : ''}
                       onChange={handleChange}
                       autoComplete="address-level1"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -539,7 +579,7 @@ export default function AddPage () {
                       type="text"
                       name="postal-code"
                       id="postal-code"
-                      value={contact.postalCode}
+                      value={contact.postalCode ? contact.postalCode : ''}
                       onChange={handleChange}
                       autoComplete="postal-code"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -562,7 +602,7 @@ export default function AddPage () {
                   <TextEntry
                     label="Facebook"
                     id="facebook"
-                    value={contact.facebook}
+                    value={contact.facebook ? contact.facebook : ''}
                     changeHandler={handleChange}
                   />
                 </div>
@@ -570,7 +610,7 @@ export default function AddPage () {
                   <TextEntry
                     label="Instagram"
                     id="instagram"
-                    value={contact.instagram}
+                    value={contact.instagram ? contact.instagram : ''}
                     changeHandler={handleChange}
                   />
                 </div>
@@ -578,7 +618,7 @@ export default function AddPage () {
                   <TextEntry
                     label="Snapchat"
                     id="snapchat"
-                    value={contact.snapchat}
+                    value={contact.snapchat ? contact.snapchat : ''}
                     changeHandler={handleChange}
                   />
                 </div>
@@ -586,7 +626,7 @@ export default function AddPage () {
                   <TextEntry
                     label="Twitter"
                     id="twitter"
-                    value={contact.twitter}
+                    value={contact.twitter ? contact.twitter : ''}
                     changeHandler={handleChange}
                   />
                 </div>
@@ -594,7 +634,7 @@ export default function AddPage () {
                   <TextEntry
                     label="LinkedIn"
                     id="linkedin"
-                    value={contact.linkedin}
+                    value={contact.linkedin ? contact.linkedin : ''}
                     changeHandler={handleChange}
                   />
                 </div>
@@ -602,7 +642,7 @@ export default function AddPage () {
                   <TextEntry
                     label="Discord"
                     id="discord"
-                    value={contact.discord}
+                    value={contact.discord ? contact.discord : ''}
                     changeHandler={handleChange}
                   />
                 </div>
@@ -610,7 +650,7 @@ export default function AddPage () {
                   <TextEntry
                     label="Github"
                     id="github"
-                    value={contact.github}
+                    value={contact.github ? contact.github : ''}
                     changeHandler={handleChange}
                   />
                 </div>
@@ -618,7 +658,7 @@ export default function AddPage () {
                   <TextEntry
                     label="Spotify"
                     id="spotify"
-                    value={contact.spotify}
+                    value={contact.spotify ? contact.spotify : ''}
                     changeHandler={handleChange}
                   />
                 </div>
@@ -631,7 +671,8 @@ export default function AddPage () {
                   name="check-important"
                   type="checkbox"
                   className='w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                  value={contact.important.toString()}
+                  value={contact.important ? contact.important.toString() : 'false'}
+                  checked = {contact.important ? contact.important : false}
                   onChange={handleChange}
                 />
                 <label
