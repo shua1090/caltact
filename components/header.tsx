@@ -1,3 +1,4 @@
+/* eslint-disable no-tabs */
 import Link from 'next/link'
 import ThemeToggle from './themetoggle'
 import { User2Icon } from 'lucide-react'

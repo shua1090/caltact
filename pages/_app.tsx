@@ -1,3 +1,6 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable no-tabs */
+
 import { ThemeProvider } from 'next-themes'
 import { type AppProps } from 'next/app'
 import Header from '@/components/header'
