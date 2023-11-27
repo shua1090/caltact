@@ -1,18 +1,24 @@
 import Link from 'next/link'
+import ThemeToggle from './themetoggle'
+import { User2Icon } from 'lucide-react'
 
 export default function Header () {
   return (
-    <header className="flex flex-row justify-end gap-4 p-10 w-full text-gray-700">
-      Caltact 
-      <Link href="/">
-        <p className="text-lg font-light">Home</p>
-      </Link>
-      <Link href = "/addpage">
-          <p className = "text-lg font-light">Add Contact</p>
-      </Link>
-      <Link href="/signin">
-        <p className="text-lg font-light">Signin</p>
-      </Link>
-    </header>
+		<header className="rounded-lg mb-10 flex justify-between bg-white dark:bg-zinc-900 px-10 py-4 drop-shadow-md p-2 text-gray-800 dark:text-slate-100">
+			<Link href="/">
+				<h1 className="font-bold text-4xl tracking-tighter flex items-center gap-2">
+					Caltact <User2Icon size={32} />
+				</h1>
+			</Link>
+			<div className="flex flex-row items-center justify-end gap-6">
+				<Link href="/addpage">
+					<p className="hover:animate-[wiggle_1s_ease-in-out_infinite] text-lg font-light">Add Contact</p>
+				</Link>
+				<Link href="/signin">
+					<p className="hover:animate-[wiggle_1s_ease-in-out_infinite] text-lg font-light">Sign In</p>
+				</Link>
+				<ThemeToggle />
+			</div>
+		</header>
   )
 }

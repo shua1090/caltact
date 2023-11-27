@@ -1,7 +1,6 @@
 import '../../app/globals.css'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import Header from '@/components/header'
 import type contact from '.././api/types/contact'
 import '.././index.css'
 
@@ -58,8 +57,7 @@ const DynamicContactPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-white">
-      <Header />
+    <main className="min-h-screen ">
       <div className="px-10 w-screen">
         <div className="flex flex-row gap-6 items-center w-full">
           <input
