@@ -7,7 +7,7 @@ import fillContact from './utils/fillContact'
 
 // Handler function to handle when a user attempts to add a new contact
 // Requires types/contact.ts
-export default async function handler (
+export async function handler (
   req: NextApiRequest,
   res: NextApiResponse
 ) {
