@@ -7,7 +7,7 @@
 }
 
 /* For small desktop displays */
-@media only screen and (max-width: 1468px) {
+@media only screen and (max-width: 1568px) {
   .contacts {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -15,7 +15,7 @@
   }
 }
 /* For tablet screens */ 
-@media only screen and (max-width:1168px) {
+@media only screen and (max-width:1368px) {
   .contacts {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -23,7 +23,7 @@
   }
 }
 
-@media only screen and (max-width: 890px) {
+@media only screen and (max-width: 990px) {
   .contacts {
       display: grid;
       grid-template-columns: repeat(2, 1fr);

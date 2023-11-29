@@ -1,5 +1,4 @@
 import '../app/globals.css'
-import Header from '@/components/header'
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'
 import { config } from 'dotenv'
 import { useEffect, useState } from 'react'
@@ -45,8 +44,7 @@ export default function Signin () {
 
   if (isLoading) {
     return (
-    <main className="min-h-screen bg-white">
-      <Header />
+    <main className="min-h-screen">
       <div className="w-full flex flex-col items-center justify-center">
         <p className="text-center text-xl font-light mt-10">
           Loading...
@@ -57,8 +55,7 @@ export default function Signin () {
   }
 
   return (
-    <main className="min-h-screen bg-white">
-      <Header />
+    <main className="min-h-screen">
       {localStorage.getItem('token') === null || localStorage.getItem('token') === '' || localStorage.getItem('token') === undefined
         ? (
         <div className="w-40 mx-auto">
@@ -75,12 +72,12 @@ export default function Signin () {
         </div>
           )
         : (
-        <div className="w-full flex flex-col items-center justify-center text-black">
-          <p className="text-center text-xl font-light mt-10 text-black">
+        <div className="w-full flex flex-col items-center justify-center">
+          <p className="text-center text-xl font-light mt-10">
             Currently logged in as {localStorage.getItem('email')}{' '}
           </p>
           <button
-            className="w-40 mx-auto font-light py-2 px-4 rounded mt-10 border border-black text-black"
+            className="w-40 mx-auto font-light py-2 px-4 rounded mt-10 border border-black dark:border-white"
             onClick={() => {
               localStorage.clear()
               window.location.reload()
