@@ -118,71 +118,77 @@ const DynamicContactPage = () => {
           </div>
 
           {/* Right div for other information */}
-          <div className="flex-grow ml-8 w-full flex">
-            {userData && (
-              <>
-                {/* First column */}
-                <div className="w-1/2 mb-4 mt-4">
-                  <p className="text-gray-700 mb-2">Email: {userData.email}</p>
-                  <p className="text-gray-700 mb-2">
-                    Phone: {userData.phoneNumber}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Instagram: {userData.instagram}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Snapchat: {userData.snapchat}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Discord: {userData.discord}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    LinkedIn: {userData.linkedin}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Github: {userData.github}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Facebook: {userData.facebook}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Twitter: {userData.twitter}
-                  </p>
-                </div>
+          <div className = "flex-grow ml-8 w-full flex">
+            <div className = "flex flex-col">
+              <div className="flex-grow ml-8 w-full flex">
+                {userData && (
+                  <>
+                    {/* First column */}
+                    <div className="w-1/2 mb-4 mt-4">
+                      <p className="text-gray-700 mb-2">Email: {userData.email}</p>
+                      <p className="text-gray-700 mb-2">
+                        Phone: {userData.phoneNumber}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Instagram: {userData.instagram}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Snapchat: {userData.snapchat}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Discord: {userData.discord}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        LinkedIn: {userData.linkedin}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Github: {userData.github}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Facebook: {userData.facebook}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Twitter: {userData.twitter}
+                      </p>
+                    </div>
 
-                {/* Second column */}
-                <div className="w-1/2 mb-4 mt-4">
-                  <p className="text-gray-700 mb-2">
-                    Birthday: {userData.birthday}
-                  </p>
-                  <p className="text-gray-700 mb-2">City: {userData.city}</p>
-                  <p className="text-gray-700 mb-2">
-                    College: {userData.college}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Major: {userData.major}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Country: {userData.country}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Street: {userData.street}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Postal Code: {userData.postalCode}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Region: {userData.region}
-                  </p>
-                  <p className="text-gray-700 mb-2">
-                    Spotify: {userData.spotify}
-                  </p>
-                </div>
+                    {/* Second column */}
+                    <div className="w-1/2 mb-4 mt-4">
+                      <p className="text-gray-700 mb-2">
+                        Birthday: {userData.birthday}
+                      </p>
+                      <p className="text-gray-700 mb-2">City: {userData.city}</p>
+                      <p className="text-gray-700 mb-2">
+                        College: {userData.college}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Major: {userData.major}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Country: {userData.country}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Street: {userData.street}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Postal Code: {userData.postalCode}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Region: {userData.region}
+                      </p>
+                      <p className="text-gray-700 mb-2">
+                        Spotify: {userData.spotify}
+                      </p>
+                    </div>
+                  </>
+                )}
+              </div>
 
-                {/* edit button */}
-                <button onClick = {redirectToEdit} className="text-gray-700">Edit Contact</button>
-              </>
-            )}
+              {/* edit button */}
+              <button onClick = {redirectToEdit} className="text-gray-700">Edit Contact</button>
+
+            </div>
+
           </div>
         </div>
       </div>
