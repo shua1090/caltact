@@ -33,7 +33,7 @@ async function updatePFP (image: File | undefined) {
   return await promise
 }
 
-async function updateContact (contact: contact) {
+async function updateContact (contact: contact, index: string | string[] | undefined) {
   const token = localStorage.getItem('token')
   const promise = fetch('/api/updateContact', {
     method: 'POST',
@@ -43,7 +43,8 @@ async function updateContact (contact: contact) {
     },
     body: JSON.stringify({
       email: localStorage.getItem('email'),
-      contact
+      contact,
+      index
     })
   })
   return await promise
@@ -80,7 +81,6 @@ export default function UpdatePage () {
   )
   const [, setIsLoading] = useState<boolean | null>(true)
   const { index } = router.query
-
   useEffect(() => {
     setIsClient(true)
     const fetchUserData = async () => {
@@ -145,7 +145,7 @@ export default function UpdatePage () {
           if (res) {
             contactToAdd = { ...contactToAdd, photo: res.url as string }
           }
-          updateContact(contactToAdd)
+          updateContact(contactToAdd, index)
             .then(async (res: Response) => {
               if (res.status === 201) {
                 return await res.json()
@@ -179,7 +179,7 @@ export default function UpdatePage () {
           console.log(error)
         })
     } else {
-      updateContact(contact)
+      updateContact(contact, index)
         .then(async (res: Response) => {
           if (res.status === 201) {
             return await res.json()
