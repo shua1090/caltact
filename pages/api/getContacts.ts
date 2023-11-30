@@ -9,11 +9,6 @@ export async function handler (
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log(req.method)
-  if (req.method !== 'POST') {
-    return res.status(405).end()
-  }
-
   // Olex's special authentication method
   if ((await verifyUser(req))) {
     console.log('Verified user')
