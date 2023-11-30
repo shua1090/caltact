@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../app/globals.css'
 import Header from '@/components/header'
 import type contact from './api/types/contact'
@@ -66,13 +66,13 @@ export default function Index () {
   function fetchNewContacts () {
     setRefetch(true)
   }
+
   return (
-    <main className="min-h-screen bg-white">
-      <Header />
+    <main className="">
       <div className="px-10 w-screen">
         <div className="flex flex-row gap-6 items-center w-full">
           <input
-            className="text-black border-2 border-gray-300 rounded-md p-2 w-full"
+            className="border-2 border-gray-300 rounded-md p-2 w-full"
             type="text"
             placeholder="Search"
             value={search}
@@ -80,7 +80,7 @@ export default function Index () {
               setSearch(e.target.value)
             }}
           />
-          <span className="text-gray-500 flex flex-row gap-2">
+          <span className="text-zinc-500 dark:text-zinc-300 flex flex-row gap-2">
             Important{' '}
             <input
               type="checkbox"
@@ -102,7 +102,7 @@ export default function Index () {
             Search
           </button>
         </div>
-        <div className="contacts gap-2 mt-10 w-screen">
+        <div className="contacts gap-4 mt-10">
           {!isLoading && contacts
             ? contacts.map((contact, i) => (
                 <div key={i}>
@@ -124,7 +124,7 @@ export default function Index () {
               )}
           {isLoading && (
             <div className="w-screen flex flex-row items-center justify-center">
-              <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900 mx-auto text-center mt-20"></div>
+              <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900 dark:border-white mx-auto text-center mt-20"></div>
             </div>
           )}
         </div>

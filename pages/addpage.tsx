@@ -1,5 +1,4 @@
 import '../app/globals.css'
-import Header from '@/components/header'
 import Image from 'next/image'
 import TextEntry from '@/components/textentry'
 import pfp from '../public/pfp.png'
@@ -266,8 +265,7 @@ export default function AddPage () {
   }
 
   return (
-    <main className=" min-h-screen bg-white">
-      <Header />
+    <main className=" min-h-screen">
       <div className="w-4/5 mx-auto">
         <form>
           <div className="space-y-12">
