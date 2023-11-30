@@ -4,7 +4,7 @@ import React from 'react'
 import { Phone, Mail, Delete } from 'lucide-react'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
-
+import pfp from '@/public/pfp.png'
 interface DataInterface {
   photo: string | undefined
   firstName: string | undefined
@@ -45,47 +45,48 @@ export default function ContactCard ({
         router.reload()
       })
   }
+  const photoURL = photo === '' ? 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg' : photo
+
   return (
-    <div className="relative cursor-pointer bg-white border-gray-200 border-2 rounded-xl m-2 w-50 h-68 flex justify-center">
+    <div className="drop-shadow-xl relative cursor-pointer bg-white border-gray-200 dark:border-zinc-900 dark:bg-zinc-900 border-2 rounded-xl w-50 h-68 flex justify-center">
       <button
         onClick={() => {
           deleteContact(index)
         }}
       >
-        <Delete className="text-indigo-800 absolute top-5 right-5" size={25} />
+        <Delete className="text-indigo-800 dark:text-indigo-600 absolute top-5 right-5" size={25} />
       </button>
 
       {/* Wrap each ContactCard with Link and use passHref */}
       <NextLink href={`/individualContact/${index}`} passHref>
         <div className="m-4 flex flex-col items-center justify-center">
           <img
-            src={photo}
+            src={photoURL}
             alt="Profile Image"
-            className="rounded-2xl h-24 w-24 object-cover"
+            className="rounded-full h-28 w-28 object-cover"
           />
-          <h1 className="font-bold mt-1 text-gray-800">
+          <h1 className="font-bold mt-1 text-gray-800 dark:text-zinc-200 tracking-wide">
             {firstName ?? 'N/A'} {lastName ?? 'N/A'}
           </h1>
-          <p className="font-light text-s text-gray-500">
+          <p className="font-light text-s dark:text-zinc-300">
             Computer Science at{' '}
           </p>
-          <p className="text-s text-indigo-700">Cal Poly SLO</p>
-          <hr className="w-48 h-0.5 mx-auto bg-gray-200 border-0 rounded-2xl my-2.5" />
-
+          <p className="text-s text-indigo-700 dark:text-indigo-400">Cal Poly SLO</p>
+          <hr className="w-48 h-0.5 mx-auto bg-gray-200 border-0 rounded-2xl my-4 mb-6" />
           <div className="flex justify-start flex-col gap-3">
-            <div className="phone-stuff text-gray-700 flex">
+            <div className="phone-stuff text-gray-700 dark:text-zinc-100 font-normal flex">
               <div className="w-10 h-10 rounded-2xl bg-indigo-200 flex justify-center">
                 <Phone className="text-indigo-800 mt-2" size={22} />
               </div>
-              <div className="font-medium m-2">
+              <div className="m-2">
                 {phoneNumber || 'No number provided'}
               </div>
             </div>
-            <div className="mail-stuff text-gray-700 flex">
+            <div className="mail-stuff text-gray-700 dark:text-zinc-100 font-normal flex">
               <div className="w-10 h-10 rounded-2xl bg-indigo-200 flex justify-center">
                 <Mail className="text-indigo-800 mt-2" size={22} />
               </div>
-              <div className="font-medium m-2">
+              <div className="m-2">
                 <a href={`mailto:${email}`}>{email || 'No email provided'}</a>
               </div>
             </div>
