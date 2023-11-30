@@ -147,7 +147,7 @@ export default function UpdatePage () {
           }
           updateContact(contactToAdd)
             .then(async (res: Response) => {
-              if (res.status === 200) {
+              if (res.status === 201) {
                 return await res.json()
               } else if (res.status === 401) {
                 alert('Authorization failed.')
@@ -165,7 +165,11 @@ export default function UpdatePage () {
               } else {
                 alert('Contact could not be added.')
               }
-              void router.push('/')
+              if (index) {
+                void router.push(`/individualContact/${index[0]}`)
+              } else {
+                void router.push('/')
+              }
             })
             .catch((error: Error) => {
               console.log(error)
@@ -195,7 +199,11 @@ export default function UpdatePage () {
           } else {
             alert('Contact could not be added.')
           }
-          void router.push('/')
+          if (index) {
+            void router.push(`/individualContact/${index[0]}`)
+          } else {
+            void router.push('/')
+          }
         })
         .catch((error: Error) => {
           console.log(error)
@@ -691,7 +699,7 @@ export default function UpdatePage () {
                 </Link>
                 <input
                   type="submit"
-                  value="Submit"
+                  value="Save"
                   className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   onClick={handleSubmit}
                 />

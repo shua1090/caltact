@@ -118,9 +118,9 @@ const DynamicContactPage = () => {
           </div>
 
           {/* Right div for other information */}
-          <div className = "flex-grow ml-8 w-full flex">
+          <div className = "ml-8 w-full">
             <div className = "flex flex-col">
-              <div className="flex-grow ml-8 w-full flex">
+              <div className="flex-grow w-full flex justify-between">
                 {userData && (
                   <>
                     {/* First column */}
@@ -174,7 +174,7 @@ const DynamicContactPage = () => {
                         Postal Code: {userData.postalCode}
                       </p>
                       <p className="text-gray-700 mb-2">
-                        Region: {userData.region}
+                        State/Region: {userData.region}
                       </p>
                       <p className="text-gray-700 mb-2">
                         Spotify: {userData.spotify}
@@ -184,11 +184,11 @@ const DynamicContactPage = () => {
                 )}
               </div>
 
-              {/* edit button */}
-              <button onClick = {redirectToEdit} className="text-gray-700">Edit Contact</button>
-
+              <div className = "flex justify-center">
+                {/* edit button */}
+                <button onClick = {redirectToEdit} className="my-8 flex justify-center py-1 w-1/3 text-gray-700 border-2 rounded-lg border-black bg-neutral-100 hover:bg-neutral-300">Edit Contact</button>
+              </div>
             </div>
-
           </div>
         </div>
       </div>

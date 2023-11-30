@@ -26,7 +26,11 @@ export default async function handler (
       if (user !== null && user !== undefined) {
         const contactToAdd = fillContact(req)
         if (await contactManager.modifyContact(user.id, contactToAdd, req.body.index)) {
-          res.status(200).end()
+          res.status(201).json({
+            message: await contactManager
+              .getContacts(user.id)
+              .then((arr) => arr[arr.length - 1])
+          })
         } else {
           res.status(401).end()
         }
