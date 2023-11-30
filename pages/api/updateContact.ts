@@ -6,7 +6,7 @@ import verifyUser from './utils/verifyUser'
 
 // Handler function to handle when a user attempts to add a new contact
 // Requires types/contact.ts
-export async function handler (
+export default async function handler (
   req: NextApiRequest,
   res: NextApiResponse
 ) {

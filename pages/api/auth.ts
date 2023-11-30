@@ -5,7 +5,7 @@ import userDBManager from '../../database/index'
 const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? ''
 const client = new OAuth2Client(CLIENT_ID)
 
-export async function handler (req: NextApiRequest, res: NextApiResponse) {
+export default async function handler (req: NextApiRequest, res: NextApiResponse) {
   const token = req.headers.authorization?.split(' ')[1]
   if (!token) {
     res.status(401).json({ message: 'Authorization token missing' }); return
