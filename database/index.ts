@@ -33,6 +33,19 @@ class UserDBManager {
     this.db = db
   }
 
+  async updateUser (u: User) {
+    const userDoc = await this.getUserByEmail(u.email)
+
+    if (userDoc) {
+      // If user exists, refresh session
+      await setDoc(doc(this.db, 'users', userDoc.id),
+        u
+      )
+    } else {
+      return null
+    }
+  }
+
   async getUsers () {
     const usersCol = collection(this.db, 'users')
     const userSnapshot = await getDocs(usersCol)
