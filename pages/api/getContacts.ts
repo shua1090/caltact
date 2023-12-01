@@ -25,9 +25,10 @@ export default async function handler (
         req.body.index = parseInt(req.body.index)
       }
       let contacts = await contactManager.getContacts(u.id)
-      if (req.body.index !== null || req.body.index !== undefined) {
+      if (req.body.index !== null && req.body.index !== undefined) {
         if (req.body.index <= contacts.length) {
           res.status(200).json({ contacts: contacts[req.body.index] })
+          return
         }
         if (req.body.important === true) {
           contacts = contacts.filter((c: { important: boolean }) => c.important)
