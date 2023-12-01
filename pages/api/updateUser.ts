@@ -30,8 +30,9 @@ export default async function handler (
   }
 
   try {
-    const updatedUser = req.body.user
+    const updatedUser = req.body
     await userDBManager.updateUser(updatedUser)
+    res.status(400).send({ message: 'Succesfully modified User' })
   } catch (error) {
     console.log(`Error in addContacts: ${error as string}`)
     res.status(401).json({

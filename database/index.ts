@@ -35,9 +35,9 @@ class UserDBManager {
 
   async updateUser (u: User) {
     const userDoc = await this.getUserByEmail(u.email)
-
     if (userDoc) {
       // If user exists, refresh session
+      console.log('updating user')
       await setDoc(doc(this.db, 'users', userDoc.id),
         u
       )
@@ -87,7 +87,8 @@ class UserDBManager {
         session,
         firstName,
         lastName,
-        email
+        email,
+        other_info: userDoc.other_info ?? null
       })
     } else {
       // If user doesn't exist, create a new one
