@@ -33,7 +33,7 @@ async function updatePFP (image: File | undefined) {
   return await promise
 }
 
-async function updateContact (contact: contact) {
+async function updateContact (contact: contact, index: number) {
   const token = localStorage.getItem('token')
   const promise = fetch('/api/updateContact', {
     method: 'POST',
@@ -43,7 +43,8 @@ async function updateContact (contact: contact) {
     },
     body: JSON.stringify({
       email: localStorage.getItem('email'),
-      contact
+      contact,
+      index
     })
   })
   return await promise
@@ -80,6 +81,11 @@ export default function UpdatePage () {
   )
   const [, setIsLoading] = useState<boolean | null>(true)
   const { index } = router.query
+
+  let indexNum: number
+  if (index) {
+    indexNum = parseInt(index[0])
+  }
 
   useEffect(() => {
     setIsClient(true)
@@ -122,6 +128,7 @@ export default function UpdatePage () {
   }, [index])
 
   const [imageFile, setImageFile] = useState<File>()
+  const [photoChanged, setPhotoChanged] = useState(false)
 
   if (!isClient) {
     return null // or return a loader, placeholder, etc.
@@ -145,7 +152,7 @@ export default function UpdatePage () {
           if (res) {
             contactToAdd = { ...contactToAdd, photo: res.url as string }
           }
-          updateContact(contactToAdd)
+          updateContact(contactToAdd, indexNum)
             .then(async (res: Response) => {
               if (res.status === 201) {
                 return await res.json()
@@ -179,7 +186,7 @@ export default function UpdatePage () {
           console.log(error)
         })
     } else {
-      updateContact(contact)
+      updateContact(contact, indexNum)
         .then(async (res: Response) => {
           if (res.status === 201) {
             return await res.json()
@@ -305,6 +312,7 @@ export default function UpdatePage () {
     const value = event.target as HTMLInputElement
     if (value.files) {
       setImageFile(value.files[0])
+      setPhotoChanged(true)
       console.log(value.files[0])
     }
   }
@@ -335,7 +343,7 @@ export default function UpdatePage () {
                   </div>
                   <div className="mt-2 flex items-center gap-x-3">
                     <Image
-                      src={contact.photo ? contact.photo : imageFile ? URL.createObjectURL(imageFile) : pfp}
+                      src={photoChanged ? imageFile ? URL.createObjectURL(imageFile) : contact.photo ? contact.photo : pfp : contact.photo ? contact.photo : pfp }
                       width="48"
                       height="48"
                       alt="upload profile picture preview"
