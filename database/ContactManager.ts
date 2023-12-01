@@ -35,7 +35,7 @@ class ContactDBManager {
   }
 
   // if contact null, delete contact, else replace
-  async modifyContact (id: string, contact: Contact | null, index: BigInteger) {
+  async modifyContact (id: string, contact: Contact | null, index: number) {
     const contactsCol = collection(this.db, 'contacts')
     const q = query(contactsCol, where(documentId(), '==', id))
     const contactDoc = (await getDocs(q)).docs
@@ -48,7 +48,7 @@ class ContactDBManager {
     } else {
       const updatedcontacts = contactsData.contacts
       if (contact !== null) {
-        updatedcontacts.splice(index, 1, contact)
+        updatedcontacts[index] = contact
       } else {
         updatedcontacts.splice(index, 1)
       }
