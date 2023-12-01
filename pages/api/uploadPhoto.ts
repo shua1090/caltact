@@ -16,7 +16,7 @@ export const config = {
 
 // handler function for when a user tries uploading a photo to cloud storage
 
-export async function handler (
+export default async function handler (
   req: NextApiRequest,
   res: NextApiResponse
 ) {
