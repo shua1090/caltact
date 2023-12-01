@@ -22,25 +22,34 @@ export default async function handler (
     res.status(401).json({ message: 'Invalid token' }); return
   }
   try {
+    const index = req.body.index
     if (req.method === 'POST') {
       const user = await userManager.getUserByEmail(req.body.email)
-      if (user !== null && user !== undefined) {
+      if (user !== null && user !== undefined && index !== undefined) {
         const contactToAdd = fillContact(req)
-        if (await contactManager.modifyContact(user.id, contactToAdd, req.body.index)) {
-          res.status(200).end()
+        if (await contactManager.modifyContact(user.id, contactToAdd, index)) {
+          res.status(201).json({
+            message: await contactManager
+              .getContacts(user.id)
+              .then((arr) => arr[index])
+          })
         } else {
           res.status(401).end()
         }
+      } else {
+        res.status(400).end()
       }
     }
     if (req.method === 'DELETE') {
       const user = await userManager.getUserByEmail(req.body.email)
-      if (user !== null && user !== undefined) {
-        if (await contactManager.modifyContact(user.id, null, req.body.index)) {
+      if (user !== null && user !== undefined && index !== undefined) {
+        if (await contactManager.modifyContact(user.id, null, index)) {
           res.status(200).end()
         } else {
           res.status(401).end()
         }
+      } else {
+        res.status(400).end()
       }
     }
     res.status(200).json({ message: 'no delete' })
