@@ -20,6 +20,10 @@ export default async function handler (
     if (u === null) {
       res.status(403).json({ message: 'Errored out getting user by passed-in email' })
     } else {
+      // If index isn't a number, convert it to one
+      if (typeof req.body.index !== 'number') {
+        req.body.index = parseInt(req.body.index)
+      }
       let contacts = await contactManager.getContacts(u.id)
       if (req.body.index !== null || req.body.index !== undefined) {
         if (req.body.index <= contacts.length) {
