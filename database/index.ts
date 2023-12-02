@@ -8,7 +8,8 @@ import {
   addDoc,
   doc,
   setDoc,
-  getFirestore
+  getFirestore,
+  and
 } from 'firebase/firestore/lite'
 import { getStorage } from 'firebase/storage'
 import { type User } from '@/pages/api/types/user'
@@ -50,6 +51,23 @@ class UserDBManager {
     const usersCol = collection(this.db, 'users')
     const userSnapshot = await getDocs(usersCol)
     const users = userSnapshot.docs.map((doc) => doc.data())
+    return users
+  }
+
+  async getUsersFiltered (firstNameFilter: string) {
+    const usersCol = collection(this.db, 'users')
+    // Yeah it's weird, don't question it; this is equivalent to startsWith
+    const firstNameEnd = firstNameFilter.split('').map((val, ind) => ((ind === firstNameFilter.length - 1) ? String.fromCharCode(val.charCodeAt(0) + 1) : val)).join('')
+    const q = query(usersCol, and(where('firstName', '>=', firstNameFilter), where('firstName', '<', firstNameEnd)))
+    const userSnapshot = await getDocs(q)
+    const users: Array<User | null> = userSnapshot.docs.map((doc) => {
+      const u = doc.data() as User
+      if (u.other_info?.important) {
+        return u
+      } else {
+        return null
+      }
+    }).filter((val) => (val))
     return users
   }
 
