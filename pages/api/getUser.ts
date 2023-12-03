@@ -1,5 +1,7 @@
+// For use in user profile modification (changing your own details),
+// this will be useful to fill a given user's current details, which
+// they can just edit later on
 import { type NextApiRequest, type NextApiResponse } from 'next'
-import contactManager from '../../database/ContactManager'
 import userManager from '../../database/index'
 import verifyUser from './utils/verifyUser'
 
@@ -23,26 +25,7 @@ export default async function handler (
     if (u === null) {
       res.status(403).json({ message: 'Errored out getting user by passed-in email' })
     } else {
-      // If index isn't a number, convert it to one
-      if (typeof req.body.index !== 'number') {
-        req.body.index = parseInt(req.body.index)
-      }
-      let contacts = await contactManager.getContacts(u.id)
-      if (req.body.index !== null && req.body.index !== undefined) {
-        if (req.body.index <= contacts.length) {
-          res.status(200).json({ contacts: contacts[req.body.index] })
-          return
-        }
-        if (req.body.important === true) {
-          contacts = contacts.filter((c: { important: boolean }) => c.important)
-        }
-        if (req.body.search) {
-          contacts = contacts.filter(
-            (c: { firstName: string, lastName: string }) => (c.firstName.toLowerCase() + ' ' + c.lastName.toLowerCase()).includes(req.body.search.toLowerCase())
-          )
-        }
-        res.status(200).json({ contacts })
-      }
+      res.status(400).json(u)
     }
   } catch (error) {
     console.log(`Error in addContacts: ${error as string}`)
