@@ -8,12 +8,10 @@ import { useRouter } from 'next/router'
 import type contact from './api/types/contact'
 import { type User } from './api/types/user'
 
-
-
 export default function UserInfo () {
   const router = useRouter()
   const [isClient, setIsClient] = useState(false)
-  const [contact, setContact] = useState<User>(
+  const [contact, setContact] = useState<contact>(
     {
       photo: '',
       college: '',
@@ -50,45 +48,44 @@ export default function UserInfo () {
   useEffect(() => {
     setIsClient(true)
     const fetchUserData = async () => {
-        setIsLoading(true);
-      
-        try {
-          const body = {
-            email: localStorage.getItem('email'),
-          };
-      
-          const response = await fetch('/api/getUser', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-            body: JSON.stringify(body),
-          });
-      
-          if (response.ok) {
-            const data = await response.json();
-            if (data.length > 0) {
-              console.log('User data received:', data[0]);
-              setContact(data[0]);
-            } else {
-              console.error('User not found');
-            }
-          } else if (response.status === 401) {
-            console.log('Unauthorized, redirecting to login');
-            window.location.href = '/signin';
-          } else {
-            console.error('Failed to fetch user:', response.statusText);
-          }
-        } catch (error) {
-          console.error('Error fetching user:', error);
-        } finally {
-          setIsLoading(false);
+      setIsLoading(true)
+
+      try {
+        const body = {
+          email: localStorage.getItem('email')
         }
-      };
-      
-    void fetchUserData();
-  }, [index]);
+        const response = await fetch('/api/getUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(body)
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          if (data.length > 0) {
+            console.log('User data received:', data[0])
+            setContact(data[0])
+          } else {
+            console.error('User not found')
+          }
+        } else if (response.status === 401) {
+          console.log('Unauthorized, redirecting to login')
+          window.location.href = '/signin'
+        } else {
+          console.error('Failed to fetch user:', response.statusText)
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    void fetchUserData()
+  }, [index])
 
   const [imageFile, setImageFile] = useState<File>()
   const [photoChanged, setPhotoChanged] = useState(false)
@@ -96,10 +93,6 @@ export default function UserInfo () {
   if (!isClient) {
     return null // or return a loader, placeholder, etc.
   }
-
-
-
-
 
   if (isClient && localStorage.getItem('token') === null) {
     void router.push('/signin')
