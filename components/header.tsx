@@ -12,6 +12,9 @@ export default function Header () {
 				</h1>
 			</Link>
 			<div className="flex flex-row items-center justify-end gap-6">
+				<Link href="/userInfo">
+					<p className="hover:animate-[wiggle_1s_ease-in-out_infinite] text-lg font-light">Personal Information</p>
+				</Link>
 				<Link href="/addpage">
 					<p className="hover:animate-[wiggle_1s_ease-in-out_infinite] text-lg font-light">Add Contact</p>
 				</Link>
