@@ -6,6 +6,7 @@ import userManager from '../../database/index'
 import verifyUser from './utils/verifyUser'
 import { type User } from './types/user'
 
+
 // Handler function to handle when a user attempts to get contacts
 // Requires types/contact.ts
 export default async function handler (
