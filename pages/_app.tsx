@@ -10,7 +10,7 @@ function MyApp ({ Component, pageProps }: AppProps) {
   return (
 		<>
 			<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-                <div className='dark:text-white text-black bg-zinc-50 dark:bg-zinc-800'>
+                <div className='dark:text-white text-gray-900 bg-zinc-50 dark:bg-zinc-800'>
 				<Header />
 				<Component {...pageProps} />
                 <Footer/>
