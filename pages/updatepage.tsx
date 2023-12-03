@@ -1,5 +1,4 @@
 import '../app/globals.css'
-import Header from '@/components/header'
 import Image from 'next/image'
 import TextEntry from '@/components/textentry'
 import pfp from '../public/pfp.png'
