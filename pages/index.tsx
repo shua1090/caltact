@@ -114,6 +114,8 @@ export default function Index () {
                     index={i}
                     email={contact.email ?? ''}
                     setIsLoading={setIsLoading}
+                    major={contact.major ?? undefined}
+                    college={contact.college ?? undefined}
                   />
                 </div>
             ))

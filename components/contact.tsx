@@ -13,6 +13,8 @@ interface DataInterface {
   email: string | undefined
   index: number
   setIsLoading: any
+  major: string | undefined
+  college: string | undefined
 }
 
 export default function ContactCard ({
@@ -22,7 +24,9 @@ export default function ContactCard ({
   phoneNumber,
   index,
   email,
-  setIsLoading
+  setIsLoading,
+  major,
+  college
 }: DataInterface) {
   const router = useRouter()
   function deleteContact (index: number) {
@@ -45,7 +49,7 @@ export default function ContactCard ({
         router.reload()
       })
   }
-  const photoURL = photo === '' ? 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg' : photo
+  const photoURL = photo === '' ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png' : photo
 
   return (
     <div className="drop-shadow-xl relative cursor-pointer bg-white border-gray-200 dark:border-zinc-900 dark:bg-zinc-900 border-2 rounded-xl w-50 h-68 flex justify-center">
@@ -69,9 +73,9 @@ export default function ContactCard ({
             {firstName ?? 'N/A'} {lastName ?? 'N/A'}
           </h1>
           <p className="font-light text-s dark:text-zinc-300">
-            Computer Science at{' '}
+            {major || 'Student'} at{' '}
           </p>
-          <p className="text-s text-indigo-700 dark:text-indigo-400">Cal Poly SLO</p>
+          <p className="text-s text-indigo-700 dark:text-indigo-400">{college || 'Cal Poly SLO'}</p>
           <hr className="w-48 h-0.5 mx-auto bg-gray-200 border-0 rounded-2xl my-4 mb-6" />
           <div className="flex justify-start flex-col gap-3">
             <div className="phone-stuff text-gray-700 dark:text-zinc-100 font-normal flex">
