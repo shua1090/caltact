@@ -81,6 +81,7 @@ export default function AddPage () {
   const [autoFill, setAutoFill] = useState([])
 
   const [imageFile, setImageFile] = useState<File>()
+  const [photoChanged, setPhotoChanged] = useState(false)
 
   const router = useRouter()
 
@@ -168,6 +169,7 @@ export default function AddPage () {
     const value = event.target as HTMLInputElement
     if (value.files) {
       setImageFile(value.files[0])
+      setPhotoChanged(true)
       console.log(value.files[0])
     }
   }
@@ -359,7 +361,7 @@ export default function AddPage () {
                   </div>
                   <div className="mt-2 flex items-center gap-x-3">
                     <Image
-                      src={imageFile ? URL.createObjectURL(imageFile) : pfp}
+                      src={photoChanged ? imageFile ? URL.createObjectURL(imageFile) : contact.photo ? contact.photo : pfp : contact.photo ? contact.photo : pfp }
                       width="48"
                       height="48"
                       alt="upload profile picture preview"
