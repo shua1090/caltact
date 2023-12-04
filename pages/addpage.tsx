@@ -313,11 +313,15 @@ export default function AddPage () {
       'github',
       'spotify'
     ]
+    const newContactFields: any = {
+      ...contact
+    }
     for (const field of fields) {
       if (value[field] !== undefined) {
-        setContact({ ...contact, [field]: value[field] })
+        newContactFields[field] = value[field]
       }
     }
+    setContact(newContactFields)
     setAutoFill([])
   }
 
@@ -431,7 +435,7 @@ export default function AddPage () {
                     />
                     <button
                       onClick={sendAutofillRequest}
-                      className="flex flex-row items-center justify-center border rounded text-sm w-28 h-8 bg-white shadow border-black"
+                      className={`flex flex-row items-center justify-center border rounded text-sm w-28 h-8 bg-white shadow border-black ${contact.firstName === '' ? 'opacity-10' : 'opacity-100'}`}
                       disabled={contact.firstName === ''}
                     >
                       Autofill 🔍
