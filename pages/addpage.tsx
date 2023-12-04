@@ -5,7 +5,7 @@ import pfp from '../public/pfp.png'
 import { type FormEvent, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-
+import AutoFillModal from '@/components/autofill'
 async function postPFP (image: File | undefined) {
   const token = localStorage.getItem('token')
   const body = new FormData()
@@ -77,6 +77,9 @@ export default function AddPage () {
     spotify: '',
     important: false
   })
+
+  const [autoFill, setAutoFill] = useState([])
+
   const [imageFile, setImageFile] = useState<File>()
 
   const router = useRouter()
@@ -117,7 +120,7 @@ export default function AddPage () {
               }
             })
             .then((res) => {
-            // redirect to user home page
+              // redirect to user home page
               if (res !== undefined) {
                 alert('Contact added successfully!')
               } else {
@@ -264,8 +267,79 @@ export default function AddPage () {
     return <div></div>
   }
 
+  function sendAutofillRequest (e: any) {
+    e.preventDefault()
+    if (contact.firstName !== '') {
+      fetch('/api/getUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({
+          email: localStorage.getItem('email'),
+          filter: contact.firstName
+        })
+      }).then(async res => await res.json())
+        .then(res => {
+          console.log(res)
+          if (res?.users && res.users.length > 0) {
+            setAutoFill(res.users)
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+    }
+  }
+
+  function processAutofill (value: any) {
+    const fields = [
+      'firstName',
+      'lastName',
+      'email',
+      'phoneNumber',
+      'birthday',
+      'country',
+      'street',
+      'city',
+      'region',
+      'postalCode',
+      'facebook',
+      'instagram',
+      'snapchat',
+      'twitter',
+      'linkedin',
+      'discord',
+      'github',
+      'spotify'
+    ]
+    const newContactFields: any = {
+      ...contact
+    }
+    for (const field of fields) {
+      if (value[field] !== undefined) {
+        newContactFields[field] = value[field]
+      }
+    }
+    setContact(newContactFields)
+    setAutoFill([])
+  }
+
   return (
     <main className="min-h-screen">
+      {
+        autoFill.length > 0 &&
+         // Modal showing all the autoFill stuff
+         (
+          <AutoFillModal
+            autoFill={autoFill}
+            setAutoFill={setAutoFill}
+            onButtonClick={(value) => {
+              processAutofill(value)
+            }}
+          />
+         )
+      }
       <div className="w-4/5 mx-auto">
         <form>
           <div className="space-y-12">
@@ -289,7 +363,7 @@ export default function AddPage () {
                       width="48"
                       height="48"
                       alt="upload profile picture preview"
-                      className = "rounded-full object-cover w-12 h-12"
+                      className="rounded-full object-cover w-12 h-12"
                     />
                     <label
                       htmlFor="file-upload"
@@ -349,7 +423,7 @@ export default function AddPage () {
                   >
                     First Name
                   </label>
-                  <div className="mt-2">
+                  <div className="mt-2 flex flex-row gap-2 justify-start items-start">
                     <input
                       type="text"
                       name="first-name"
@@ -359,6 +433,13 @@ export default function AddPage () {
                       autoComplete="given-name"
                       className="block w-full rounded-md border-0 dark:text-zinc-300 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
+                    <button
+                      onClick={sendAutofillRequest}
+                      className={`flex flex-row items-center justify-center border rounded text-sm w-28 h-8 bg-white shadow border-black ${contact.firstName === '' ? 'opacity-10' : 'opacity-100'}`}
+                      disabled={contact.firstName === ''}
+                    >
+                      Autofill 🔍
+                    </button>
                   </div>
                 </div>
 
@@ -624,19 +705,20 @@ export default function AddPage () {
             </div>
 
             <div className="flex items-center mb-4 border-b dark:border-zinc-300 border-gray-900/10 pb-12">
-                <input
-                  id="check-important"
-                  name="check-important"
-                  type="checkbox"
-                  className='w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                  value={contact.important.toString()}
-                  onChange={handleChange}
-                />
-                <label
-                  htmlFor="check-important"
-                  className="w-full py-4 ms-2 text-base font-medium text-gray-900 dark:text-white">
-                    Mark contact as important
-                </label>
+              <input
+                id="check-important"
+                name="check-important"
+                type="checkbox"
+                className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                value={contact.important.toString()}
+                onChange={handleChange}
+              />
+              <label
+                htmlFor="check-important"
+                className="w-full py-4 ms-2 text-base font-medium text-gray-900 dark:text-white"
+              >
+                Mark contact as important
+              </label>
             </div>
 
             <div className="border-b dark:border-zinc-300 border-gray-900/10 pb-12 ">
