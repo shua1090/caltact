@@ -335,7 +335,7 @@ export default function UserInfo () {
                 Update Personal Information
               </h2>
               <p className="mt-1 text-lg leading-6 text-gray-600 dark:text-zinc-300">
-                Change the information of the contact you would like to update
+                Change your profile info
               </p>
 
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
