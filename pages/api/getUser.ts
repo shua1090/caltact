@@ -6,7 +6,6 @@ import userManager from '../../database/index'
 import verifyUser from './utils/verifyUser'
 import { type User } from './types/user'
 
-
 // Handler function to handle when a user attempts to get contacts
 // Requires types/contact.ts
 export default async function handler (
@@ -40,7 +39,7 @@ export default async function handler (
     } else {
       res.status(403).json({ message: "Couldn't find a valid param for the query" })
     }
-    
+
     if (u === null) {
       res.status(403).json({ message: 'Errored out getting user by passed-in param' })
     } else {
