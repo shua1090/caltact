@@ -6,7 +6,6 @@ import userManager from '../../database/index'
 import verifyUser from './utils/verifyUser'
 import { type User } from './types/user'
 
-
 // Handler function to handle when a user attempts to get contacts
 // Requires types/contact.ts
 export default async function handler (
@@ -57,7 +56,7 @@ export default async function handler (
         res.status(403).json({ message: 'Passed-In param returned null-d users' })
         return
       }
-      res.status(400).json(u)
+      res.status(200).json(u)
     }
   } catch (error) {
     console.log(`Error in getUser: ${error as string}`)

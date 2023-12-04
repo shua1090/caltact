@@ -20,8 +20,8 @@ export default async function handler (
   }
 
   // For each argument passed in, check through the profanity filter
-  for (const prop in req.body.user) {
-    if (profanity.exists(req.body.contact[prop])) {
+  for (const prop in req.body.other_info) {
+    if (profanity.exists(req.body.other_info[prop])) {
       res.status(403).json({
         // Just a flag, so its easy to check (code == PROF) back in frontend
         message: `Profanity filter flagged ${prop}:'${req.body.contact[prop]}'`
@@ -32,6 +32,7 @@ export default async function handler (
   try {
     const updatedUser = req.body
     await userDBManager.updateUser(updatedUser)
+    console.log('Updated User succesfully')
     res.status(400).send({ message: 'Succesfully modified User' })
   } catch (error) {
     console.log(`Error in addContacts: ${error as string}`)

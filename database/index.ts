@@ -39,10 +39,15 @@ class UserDBManager {
     if (userDoc) {
       // If user exists, refresh session
       console.log('updating user')
-      await setDoc(doc(this.db, 'users', userDoc.id),
-        u
-      )
+      await setDoc(doc(this.db, 'users', userDoc.id), {
+        email: userDoc.email,
+        firstName: userDoc.firstName,
+        lastName: userDoc.lastName,
+        session: userDoc.session,
+        other_info: u.other_info
+      })
     } else {
+      console.log(`user ${u.email} doesnt exist!`)
       return null
     }
   }

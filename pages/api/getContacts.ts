@@ -28,6 +28,10 @@ export default async function handler (
         req.body.index = parseInt(req.body.index)
       }
       let contacts = await contactManager.getContacts(u.id)
+      if (contacts === null) {
+        res.status(200).json({})
+        return
+      }
       if (req.body.index !== null && req.body.index !== undefined) {
         if (req.body.index <= contacts.length) {
           res.status(200).json({ contacts: contacts[req.body.index] })
@@ -45,7 +49,7 @@ export default async function handler (
       }
     }
   } catch (error) {
-    console.log(`Error in addContacts: ${error as string}`)
+    console.log(`Error in getContacts: ${error as string}`)
     res.status(403).json({
       message: 'Authentication failed',
       error: (error as any).message

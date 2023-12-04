@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import ThemeToggle from './themetoggle'
 import { User2Icon } from 'lucide-react'
+import Image from 'next/image'
 
 export default function Header () {
   return (
@@ -12,11 +13,15 @@ export default function Header () {
 				</h1>
 			</Link>
 			<div className="flex flex-row items-center justify-end gap-6">
+
 				<Link href="/addpage">
 					<p className="hover:animate-[wiggle_1s_ease-in-out_infinite] text-lg font-light">Add Contact</p>
 				</Link>
 				<Link href="/signin">
 					<p className="hover:animate-[wiggle_1s_ease-in-out_infinite] text-lg font-light">Sign In</p>
+				</Link>
+				<Link href="/userInfo">
+					<Image src="/gear.png" alt="Gear Image" width={32} height={32} className="cursor-pointer" />
 				</Link>
 				<ThemeToggle />
 			</div>
