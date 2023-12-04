@@ -32,29 +32,25 @@ async function updatePFP (image: File | undefined) {
   return await promise
 }
 
-async function updateUser(user: contact, index: number) {
-    const { ...userProperties } = user;
-    const requestBody = {
-      email: localStorage.getItem('email'),
-      other_info : userProperties,
-      session: localStorage.getItem('token')
-    };
-  
-    const promise = fetch('/api/updateUser', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: 'Bearer ' + localStorage.getItem('token')
-      },
-      body: JSON.stringify(requestBody)
-    });
-  
-    return await promise;
+async function updateUser (user: contact, index: number) {
+  const { ...userProperties } = user
+  const requestBody = {
+    email: localStorage.getItem('email'),
+    other_info: userProperties,
+    session: localStorage.getItem('token')
   }
-  
 
+  const promise = fetch('/api/updateUser', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: 'Bearer ' + localStorage.getItem('token')
+    },
+    body: JSON.stringify(requestBody)
+  })
 
-
+  return await promise
+}
 
 export default function UserInfo () {
   const router = useRouter()
