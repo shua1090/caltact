@@ -103,7 +103,7 @@ export default function Index () {
           </button>
         </div>
         <div className="contacts gap-4 mt-10">
-          {!isLoading && contacts
+          {!isLoading && contacts && contacts.length > 0
             ? contacts.map((contact, i) => (
                 <div key={i}>
                   <ContactCard
