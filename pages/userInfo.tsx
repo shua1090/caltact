@@ -408,53 +408,52 @@ export default function UserInfo () {
       <div className="w-4/5 mx-auto">
         <form>
           <div className="space-y-12">
-            <div className="border-b dark:border-zinc-300  border-gray-900/10 pb-12">
+
+            <div className="pt-6 pb-5 border-b dark:border-zinc-300  border-gray-900/10">
               <h2 className="text-2xl font-semibold leading-7 dark:text-white">
-                Update Personal Information
+                Settings
               </h2>
               <p className="mt-1 text-lg leading-6 text-gray-600 dark:text-zinc-300">
-                Change your profile info
+                Update your profile and account
               </p>
-
-              <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div className="col-span-full">
-                  <div className="block text-sm font-medium leading-6 dark:text-white">
-                    Photo
-                  </div>
-                  <div className="mt-2 flex items-center gap-x-3">
-                    <Image
-                      src={
-                        photoChanged
-                          ? imageFile
-                            ? URL.createObjectURL(imageFile)
-                            : contact?.photo
-                              ? contact?.photo
-                              : pfp
-                          : contact?.photo
-                            ? contact?.photo
-                            : pfp
-                      }
-                      width="48"
-                      height="48"
-                      alt="upload profile picture preview"
-                      className="rounded-full object-cover w-12 h-12"
-                    />
-                    <label
-                      htmlFor="import-upload"
-                      className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-gray-900"
-                    >
-                      Change
-                    </label>
-                    <input
-                      id="import-upload"
-                      name="import-upload"
-                      type="file"
-                      className="sr-only"
-                      onChange={handleFileChange}
-                    />
-                  </div>
+            </div>
+            <div className="border-b dark:border-zinc-300 border-gray-900/10 pb-12">
+              <div className="col-span-full">
+                <div className="text-base font-semibold leading-7 dark:text-white">
+                  Photo
+                </div>
+                <div className="mt-2 flex items-center gap-x-3">
+                  <Image
+                    src={photoChanged ? imageFile ? URL.createObjectURL(imageFile) : contact.photo ? contact.photo : pfp : contact.photo ? contact.photo : pfp }
+                    width="48"
+                    height="48"
+                    alt="upload profile picture preview"
+                    className = "rounded-full object-cover w-12 h-12"
+                  />
+                  <label
+                    htmlFor="file-upload"
+                    className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                  >
+                    Change
+                  </label>
+                  <input
+                    id="file-upload"
+                    name="file-upload"
+                    type="file"
+                    className="sr-only"
+                    onChange={handleFileChange}
+                  />
                 </div>
               </div>
+            </div>
+
+            <div className="border-b dark:border-zinc-300 border-gray-900/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 dark:text-white">
+                School Information
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-zinc-300">
+                Fill out school information including college and major.
+              </p>
 
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div className="sm:col-span-4">
@@ -771,24 +770,42 @@ export default function UserInfo () {
               </div>
             </div>
 
-            <div className="flex items-center mb-4 border-b dark:border-zinc-300  border-gray-900/10 pb-12">
-              <input
-                id="check-important"
-                name="check-important"
-                type="checkbox"
-                className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                value={
-                  contact?.important ? contact?.important.toString() : 'false'
-                }
-                checked={contact?.important ? contact?.important : false}
-                onChange={handleChange}
-              />
-              <label
-                htmlFor="check-important"
-                className="w-full py-4 ms-2 text-base font-medium"
-              >
-                Public Profile
-              </label>
+            <div className="border-b dark:border-zinc-300 border-gray-900/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 dark:text-white">
+                Privacy Settings
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-zinc-300">
+              Set your profile to public or private.
+              </p>
+
+              <div className="mt-5 flex items-center">
+                <input
+                  id="check-important"
+                  name="check-important"
+                  type="checkbox"
+                  className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  value={
+                    contact?.important ? contact?.important.toString() : 'false'
+                  }
+                  checked={contact?.important ? contact?.important : false}
+                  onChange={handleChange}
+                />
+                <label
+                  htmlFor="check-important"
+                  className="w-full py-4 ms-2 text-base font-medium"
+                >
+                  Public Profile
+                </label>
+              </div>
+            </div>
+
+            <div className = "border-b dark:border-zinc-300 border-gray-900/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 dark:text-white">
+                Batch Add
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-zinc-300">
+                  Import a csv file to add multiple contacts at once.
+              </p>
             </div>
 
             <div className="border-b dark:border-zinc-300  border-gray-900/10 pb-12">
@@ -825,6 +842,7 @@ export default function UserInfo () {
 
               </div>
             </div>
+
           </div>
         </form>
       </div>

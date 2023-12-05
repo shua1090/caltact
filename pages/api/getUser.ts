@@ -28,14 +28,15 @@ export default async function handler (
   // through the public users
   try {
     let u: Array<User | null> = []
-    if (req.body.email) {
+    if (req.body.email && !req.body.filter) {
       // This is fine. req.body.email must be the own user's email
       // because otherwise verifyUser above wouldn't work; All in all
       // the User can only get his/her own user profile stuff, because
       // auth makes sure of it
       u = [await userManager.getUserByEmail(req.body.email)]
     } else if (req.body.filter) {
-      u = await userManager.getUsersFiltered(req.body.filter)
+      const users = await userManager.getUsersFiltered(req.body.filter)
+      res.status(200).json({ users }); return
     } else {
       res.status(403).json({ message: "Couldn't find a valid param for the query" })
     }

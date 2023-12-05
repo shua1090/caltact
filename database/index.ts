@@ -65,10 +65,10 @@ class UserDBManager {
     const firstNameEnd = firstNameFilter.split('').map((val, ind) => ((ind === firstNameFilter.length - 1) ? String.fromCharCode(val.charCodeAt(0) + 1) : val)).join('')
     const q = query(usersCol, and(where('firstName', '>=', firstNameFilter), where('firstName', '<', firstNameEnd)))
     const userSnapshot = await getDocs(q)
-    const users: Array<User | null> = userSnapshot.docs.map((doc) => {
+    const users = userSnapshot.docs.map((doc) => {
       const u = doc.data() as User
       if (u.other_info?.important) {
-        return u
+        return u.other_info
       } else {
         return null
       }
