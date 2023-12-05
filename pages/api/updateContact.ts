@@ -43,10 +43,13 @@ export default async function handler (
     if (req.method === 'DELETE') {
       const user = await userManager.getUserByEmail(req.body.email)
       if (user !== null && user !== undefined && index !== undefined) {
-        if (await contactManager.modifyContact(user.id, null, index)) {
-          res.status(200).end()
+        // This means delete all contacts
+        if (index === -1 && await contactManager.deleteAllContacts(user.id)) {
+          res.status(200).json({})
+        } else if (await contactManager.modifyContact(user.id, null, index)) {
+          res.status(200).json({})
         } else {
-          res.status(401).end()
+          res.status(401).json({ message: 'invalid values passed in, or db modification failed' })
         }
       } else {
         res.status(400).end()

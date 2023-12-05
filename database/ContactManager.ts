@@ -14,7 +14,6 @@ import {
 } from './index'
 
 import type Contact from '@/pages/api/types/contact'
-import fillContact from '@/pages/api/utils/fillContact'
 
 class ContactDBManager {
   private readonly db: Firestore
@@ -33,6 +32,20 @@ class ContactDBManager {
       return null
     }
     return s[0].contacts
+  }
+
+  async deleteAllContacts (id: string) {
+    const contactsCol = collection(this.db, 'contacts')
+    const q = query(contactsCol, where(documentId(), '==', id))
+    const contactDoc = (await getDocs(q)).docs
+    const contactsData = contactDoc.map((doc: { data: () => any }) => doc.data())[0]
+    if (contactDoc === undefined || contactsData === undefined) {
+      return false
+    }
+    await setDoc(doc(this.db, 'contacts', id), {
+      contacts: []
+    })
+    return true
   }
 
   // if contact null, delete contact, else replace
@@ -61,10 +74,27 @@ class ContactDBManager {
   }
 
   async addContactBatch (id: string, contacts: any[]) {
-    let i = 0
-    for (; i < contacts.length; i++) {
-      console.log(`Adding contact ${fillContact(contacts[i]).firstName}`)
-      await this.addContact(id, fillContact(contacts[i]))
+    const contactsCol = collection(this.db, 'contacts')
+    const q = query(contactsCol, where(documentId(), '==', id))
+    const contactDoc = (await getDocs(q)).docs
+    const contactsData = contactDoc.map((doc: { data: () => any }) => doc.data())[0]
+    // If there are no contacts for this user yet, create a new array
+    // with the new batch of contacts in it, and add it
+    if (contactDoc === undefined || contactsData === undefined) {
+      console.log('Undefined contact, creating')
+      await setDoc(doc(this.db, 'contacts', id), {
+        contacts
+      })
+    } else {
+      // Get the current contact array, add to it, and add it back in
+      let c = contactsData.contacts
+      if (!c) {
+        c = []
+      }
+      c = c.concat(contacts)
+      await setDoc(doc(this.db, 'contacts', id), {
+        contacts: c
+      })
     }
   }
 
