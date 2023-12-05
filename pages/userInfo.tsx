@@ -807,7 +807,7 @@ export default function UserInfo () {
                   Import a csv file to add multiple contacts at once.
               </p>
               <div className="col-span-full">
-                  <div className="mt-2 flex items-center gap-x-3">
+                  <div className="mt-5 flex items-center gap-x-3">
                     <label
                       htmlFor="file-upload"
                       className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-gray-900"
