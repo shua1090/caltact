@@ -806,23 +806,7 @@ export default function UserInfo () {
               <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-zinc-300">
                   Import a csv file to add multiple contacts at once.
               </p>
-            </div>
-
-            <div className="border-b dark:border-zinc-300  border-gray-900/10 pb-12">
-              <div className="mt-6 flex items-center justify-end gap-x-6">
-                <Link href="/">
-                  <button className="text-sm font-semibold leading-6 dark:text-red-400 text-red-600">
-                    Cancel
-                  </button>
-                </Link>
-                <input
-                  type="submit"
-                  value="Save"
-                  className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  onClick={handleSubmit}
-                />
-
-                <div className="col-span-full">
+              <div className="col-span-full">
                   <div className="mt-2 flex items-center gap-x-3">
                     <label
                       htmlFor="file-upload"
@@ -839,10 +823,22 @@ export default function UserInfo () {
                     />
                   </div>
                 </div>
-
+            </div>
+            <div className="border-b dark:border-zinc-300  border-gray-900/10 pb-12">
+              <div className="mt-6 flex items-center justify-end gap-x-6">
+                <Link href="/">
+                  <button className="text-sm font-semibold leading-6 dark:text-red-400 text-red-600">
+                    Cancel
+                  </button>
+                </Link>
+                <input
+                  type="submit"
+                  value="Save"
+                  className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  onClick={handleSubmit}
+                />
               </div>
             </div>
-
           </div>
         </form>
       </div>
