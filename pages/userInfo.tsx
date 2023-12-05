@@ -321,6 +321,41 @@ export default function UserInfo () {
     }
   }
 
+  function deleteAllContacts () {
+    if (confirm('Deletion of all contacts is permanent. Ok?')) {
+      const token = localStorage.getItem('token')
+      const promise = fetch('/api/updateContact', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          email: localStorage.getItem('email'),
+          index: -1
+        })
+      })
+      promise.then(async (res: Response) => {
+        if (res.status === 200) {
+          return await res.json()
+        } else if (res.status === 401) {
+          alert('Authorization failed.')
+          return undefined
+        } else {
+          return undefined
+        }
+      }).then((res) => {
+        // redirect to user home page
+        if (!res) {
+          alert('Contacts could not be deleted, check further logs or contact administrator')
+          console.log(`status: ${res.status}, message: ${res.message}`)
+        }
+        console.log('pushing home route')
+        void router.push('/')
+      }).catch((err) => { console.log(err) })
+    }
+  }
+
   function readAndUploadCSV (csv: string | undefined) {
     if (csv) {
       const csvLines = csv.split('Categories\n')[1].split('myContacts,\n')
@@ -798,7 +833,24 @@ export default function UserInfo () {
                 </label>
               </div>
             </div>
-
+            <div className = "border-b dark:border-zinc-300 border-gray-900/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 dark:text-white">
+                Delete All Contacts
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-zinc-300">
+                  Warning! This action is irreversible!
+              </p>
+              <div className="col-span-full">
+                  <div className="mt-2 flex items-center gap-x-3">
+                    <label
+                      className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-gray-900"
+                      onClick={deleteAllContacts}
+                    >
+                      Delete All Contacts!
+                    </label>
+                  </div>
+                </div>
+            </div>
             <div className = "border-b dark:border-zinc-300 border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 dark:text-white">
                 Batch Add
@@ -809,14 +861,14 @@ export default function UserInfo () {
               <div className="col-span-full">
                   <div className="mt-2 flex items-center gap-x-3">
                     <label
-                      htmlFor="file-upload"
+                      htmlFor="importfile-upload"
                       className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-gray-900"
                     >
                       Import File
                     </label>
                     <input
-                      id="file-upload"
-                      name="file-upload"
+                      id="importfile-upload"
+                      name="importfile-upload"
                       type="file"
                       className="sr-only"
                       onChange={getImportedContacts}
