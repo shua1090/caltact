@@ -14,6 +14,7 @@ import {
 } from './index'
 
 import type Contact from '@/pages/api/types/contact'
+import fillContact from '@/pages/api/utils/fillContact'
 
 class ContactDBManager {
   private readonly db: Firestore
@@ -59,6 +60,14 @@ class ContactDBManager {
     }
   }
 
+  async addContactBatch (id: string, contacts: any[]) {
+    let i = 0
+    for (; i < contacts.length; i++) {
+      console.log(`Adding contact ${fillContact(contacts[i]).firstName}`)
+      await this.addContact(id, fillContact(contacts[i]))
+    }
+  }
+
   // add a contact object to the user with the id
   async addContact (id: string, contact: Contact) {
     const contactsCol = collection(this.db, 'contacts')
@@ -74,7 +83,10 @@ class ContactDBManager {
       })
     } else {
       // Get the current contact array, add to it, and add it back in
-      const c = contactsData.contacts
+      let c = contactsData.contacts
+      if (!c) {
+        c = []
+      }
       c.push(contact)
       await setDoc(doc(this.db, 'contacts', id), {
         contacts: c
