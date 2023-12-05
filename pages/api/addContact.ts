@@ -29,7 +29,6 @@ export default async function handler (
   }
 
   try {
-    const contactToAdd = fillContact(req)
     const user = await userManager.getUserByEmail(req.body.email)
     let userid: string
     if (user?.id !== undefined) {
@@ -37,7 +36,13 @@ export default async function handler (
       // upload photo, get download link to add to database
       // await photoManager.uploadPhoto(req.body.photo, `${userid}`)
       // Gets the contact we just added in and sends it back
-      await contactManager.addContact(userid, contactToAdd)
+      if (req.body.contacts) {
+        console.log(JSON.parse(req.body.contacts))
+        await contactManager.addContactBatch(userid, JSON.parse(req.body.contacts))
+      } else {
+        const contactToAdd = fillContact(req.body.contact)
+        await contactManager.addContact(userid, contactToAdd)
+      }
       res.status(201).json({
         message: await contactManager
           .getContacts(userid)

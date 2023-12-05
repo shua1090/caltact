@@ -26,7 +26,7 @@ export default async function handler (
     if (req.method === 'POST') {
       const user = await userManager.getUserByEmail(req.body.email)
       if (user !== null && user !== undefined && index !== undefined) {
-        const contactToAdd = fillContact(req)
+        const contactToAdd = fillContact(req.body.contact)
         if (await contactManager.modifyContact(user.id, contactToAdd, index)) {
           res.status(201).json({
             message: await contactManager
