@@ -1,33 +1,32 @@
-import { type NextApiRequest } from 'next'
 import type contact from '../types/contact'
 
-export default function fillContact (req: NextApiRequest) {
+export default function fillContact (contact: any) {
   // Get all the request params into contact object
   const contactToAdd: contact = {
-    photo: req.body.contact.photo,
-    college: req.body.contact.college,
-    major: req.body.contact.major,
-    firstName: req.body.contact.firstName,
-    lastName: req.body.contact.lastName,
-    email: req.body.contact.email,
-    phoneNumber: req.body.contact.phoneNumber,
-    birthday: req.body.contact.birthday,
-    country: req.body.contact.country,
-    street: req.body.contact.street,
-    city: req.body.contact.city,
-    region: req.body.contact.region,
-    postalCode: req.body.contact.postalCode,
-    facebook: req.body.contact.facebook,
-    instagram: req.body.contact.instagram,
-    snapchat: req.body.contact.snapchat,
-    twitter: req.body.contact.twitter,
-    linkedin: req.body.contact.linkedin,
-    discord: req.body.contact.discord,
-    github: req.body.contact.github,
-    spotify: req.body.contact.spotify,
+    photo: contact.photo,
+    college: contact.college,
+    major: contact.major,
+    firstName: contact.firstName,
+    lastName: contact.lastName,
+    email: contact.email,
+    phoneNumber: contact.phoneNumber,
+    birthday: contact.birthday,
+    country: contact.country,
+    street: contact.street,
+    city: contact.city,
+    region: contact.region,
+    postalCode: contact.postalCode,
+    facebook: contact.facebook,
+    instagram: contact.instagram,
+    snapchat: contact.snapchat,
+    twitter: contact.twitter,
+    linkedin: contact.linkedin,
+    discord: contact.discord,
+    github: contact.github,
+    spotify: contact.spotify,
     // This is because we haven't added important to frontend, but
     // we want it to only be true/false, not null
-    important: req.body.contact.important ?? false
+    important: contact.important ?? false
   }
 
   // Nullify undefined properties (undefined not applicable to firestore)

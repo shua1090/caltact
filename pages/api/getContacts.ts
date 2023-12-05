@@ -28,7 +28,7 @@ export default async function handler (
         req.body.index = parseInt(req.body.index)
       }
       let contacts = await contactManager.getContacts(u.id)
-      if (contacts === null) {
+      if (!contacts || contacts.length === 0) {
         res.status(200).json({})
         return
       }
