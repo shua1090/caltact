@@ -45,9 +45,9 @@ export default async function handler (
       if (user !== null && user !== undefined && index !== undefined) {
         // This means delete all contacts
         if (index === -1 && await contactManager.deleteAllContacts(user.id)) {
-          res.status(200).json({})
+          res.status(200).json({ message: 'Batch Delete Succesful' })
         } else if (await contactManager.modifyContact(user.id, null, index)) {
-          res.status(200).json({})
+          res.status(200).json({ message: 'Deletion Succesful' })
         } else {
           res.status(401).json({ message: 'invalid values passed in, or db modification failed' })
         }
@@ -55,7 +55,6 @@ export default async function handler (
         res.status(400).end()
       }
     }
-    res.status(200).json({ message: 'no delete' })
   } catch (error) {
     console.log(`Error in updateContacts: ${error as string}`)
     res.status(401).json({
