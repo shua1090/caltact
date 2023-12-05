@@ -14,9 +14,9 @@ const AutoFillModal = ({ autoFill, setAutoFill, onButtonClick }: AutoFillModalPr
   }
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
-      <div className="relative my-auto mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div className="flex justify-between items-center mb-4">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center text-black">
+      <div className="relative my-auto mx-auto p-5 border w-96 shadow-lg rounded-md bg-white text-black">
+        <div className="flex justify-between items-center mb-4 text-black">
           <h3 className="text-xl font-bold">Auto Fill Options</h3>
           <button onClick={handleClose} className="text-black">
             X
