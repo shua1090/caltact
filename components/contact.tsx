@@ -52,7 +52,7 @@ export default function ContactCard ({
   const photoURL = photo === '' ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png' : photo
 
   return (
-    <div className="drop-shadow-xl relative cursor-pointer bg-white border-gray-200 dark:border-zinc-900 dark:bg-zinc-900 border-2 rounded-xl w-50 h-68 flex justify-center">
+    <div className="z-1 drop-shadow-xl relative cursor-pointer bg-white border-gray-200 dark:border-zinc-900 dark:bg-zinc-900 border-2 rounded-xl w-50 h-68 flex justify-center">
       <button
         onClick={() => {
           deleteContact(index)

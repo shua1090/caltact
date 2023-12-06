@@ -18,15 +18,16 @@ const ThemeToggle = () => {
   }
 
   return (
-		<div className='border-2 p-1.5 dark:border-zinc-500 flex items-center rounded-lg hover:animate-[wiggle_1s_ease-in-out_infinite]'>
+		<div className='flex items-center '>
 			{theme === 'dark'
 			  ? (
 				<button
 					onClick={() => {
 					  setTheme('light')
 					}}
+					className='flex'
 				>
-					<Sun size={24} />
+					<Sun size={24} /> Dark Mode
 				</button>
 			    )
 			  : (
@@ -34,8 +35,9 @@ const ThemeToggle = () => {
 					onClick={() => {
 					  setTheme('dark')
 					}}
+					className='flex'
 				>
-					<Moon size={24} />
+					<Moon size={24} /> Light Mode
 				</button>
 			    )}
 		</div>
