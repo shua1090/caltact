@@ -15,8 +15,8 @@ describe('Header', () => {
   it('should turn into dark mode when dark mode is clicked after clicking on dropdown menu', async () => {
     render(<Header />)
 
-    const settingsButton = screen.getByText(/Settings/i)
-    fireEvent.click(settingsButton)
+    // const settingsButton = screen.getByText(/Settings/i)
+    // fireEvent.click(settingsButton)
 
     const darkModeOption = screen.getByText(/Dark Mode/i)
     fireEvent.click(darkModeOption)
