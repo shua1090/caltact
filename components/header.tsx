@@ -25,20 +25,21 @@ export default function Header () {
   }
 
   return (
-		<header className="z-20 rounded-lg mb-10 flex justify-between bg-white dark:bg-zinc-900 px-10 py-4 drop-shadow-md p-2 text-gray-800 dark:text-slate-100">
+		<header className="z-20 rounded-lg mb-10 flex justify-between bg-white dark:bg-zinc-900 px-10 py-4 drop-shadow-md p-2 text-gray-800 dark:text-slate-100 items-center">
 			<Link href="/">
-				<h1 className=" font-bold text-4xl tracking-tighter flex  items-center gap-2">
-					Caltact <User2Icon size={32} />
+				<h1 className="font-bold text-3xl lg:text-4xl tracking-tighter flex  items-center gap-2">
+					Caltact       <User2Icon size={32} className='sm:hidden hidden lg:inline-block' />
+      <User2Icon size={24} className='lg:hidden sm:inline-block' />
 				</h1>
 			</Link>
-			<div className="flex flex-row items-center justify-end gap-6">
+			<div className="lg:text-lg sm:text-lg text-base flex flex-row items-center justify-end gap-6">
 				<Link href="/addpage">
-					<p className="hover:animate-[wiggle_1s_ease-in-out_infinite] text-lg font-light">
+					<p className="hover:animate-[wiggle_1s_ease-in-out_infinite] font-light">
 						Add Contact
 					</p>
 				</Link>
 				<Link href="/signin">
-					<p className="hover:animate-[wiggle_1s_ease-in-out_infinite] text-lg font-light">
+					<p className="hover:animate-[wiggle_1s_ease-in-out_infinite] font-light">
 						Sign In
 					</p>
 				</Link>
@@ -67,7 +68,7 @@ export default function Header () {
 					</button>
 
 					{dropdownVisible && (
-						<div role="menu" className="z-10 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-700">
+						<div role="menu" className="text-base z-10 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-700">
 							<div className="py-1">
 								<Link href="/userInfo">
 									<p
