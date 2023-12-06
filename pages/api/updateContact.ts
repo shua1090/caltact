@@ -26,7 +26,7 @@ export default async function handler (
     if (req.method === 'POST') {
       const user = await userManager.getUserByEmail(req.body.email)
       if (user !== null && user !== undefined && index !== undefined) {
-        const contactToAdd = fillContact(req)
+        const contactToAdd = fillContact(req.body.contact)
         if (await contactManager.modifyContact(user.id, contactToAdd, index)) {
           res.status(201).json({
             message: await contactManager
@@ -43,16 +43,18 @@ export default async function handler (
     if (req.method === 'DELETE') {
       const user = await userManager.getUserByEmail(req.body.email)
       if (user !== null && user !== undefined && index !== undefined) {
-        if (await contactManager.modifyContact(user.id, null, index)) {
-          res.status(200).end()
+        // This means delete all contacts
+        if (index === -1 && await contactManager.deleteAllContacts(user.id)) {
+          res.status(200).json({ message: 'Batch Delete Succesful' })
+        } else if (await contactManager.modifyContact(user.id, null, index)) {
+          res.status(200).json({ message: 'Deletion Succesful' })
         } else {
-          res.status(401).end()
+          res.status(401).json({ message: 'invalid values passed in, or db modification failed' })
         }
       } else {
         res.status(400).end()
       }
     }
-    res.status(200).json({ message: 'no delete' })
   } catch (error) {
     console.log(`Error in updateContacts: ${error as string}`)
     res.status(401).json({

@@ -316,7 +316,120 @@ export default function UserInfo () {
     if (value.files) {
       setImageFile(value.files[0])
       setPhotoChanged(true)
+      console.log('Importing Photo')
       console.log(value.files[0])
+    }
+  }
+
+  function deleteAllContacts () {
+    if (confirm('Deletion of all contacts is permanent. Ok?')) {
+      const token = localStorage.getItem('token')
+      const promise = fetch('/api/updateContact', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          email: localStorage.getItem('email'),
+          index: -1
+        })
+      })
+      promise.then(async (res: Response) => {
+        if (res.status === 200) {
+          return await res.json()
+        } else if (res.status === 401) {
+          alert('Authorization failed.')
+          return undefined
+        } else {
+          return undefined
+        }
+      }).then((res) => {
+        // redirect to user home page
+        if (!res) {
+          alert('Contacts could not be deleted, check further logs or contact administrator')
+          console.log(`status: ${res.status}, message: ${res.message}`)
+        }
+        console.log('pushing home route')
+        void router.push('/')
+      }).catch((err) => { console.log(err) })
+    }
+  }
+
+  function readAndUploadCSV (csv: string | undefined) {
+    if (csv) {
+      const csvLines = csv.split('Categories\n')[1].split('myContacts,\n')
+      let singleLine: string[] = []
+      let i = 1
+      let amount = 0
+      let c: contact | null = null
+      const contacts = []
+      const isEmpty = (str: string) => (!str || str.length === 0) ? null : str.trim().replace('\n', ' ').replace('"', '').trim()
+      for (i = 0; i < csvLines.length; i++) {
+        singleLine = csvLines[i].replace(', ', ' ').replace('\n', ' ').split(',')
+        // Get rid of Addresses of the form Home, Street
+        c = {
+          firstName: isEmpty(singleLine[0]),
+          lastName: isEmpty(singleLine[2]),
+          email: isEmpty(singleLine[14]),
+          phoneNumber: isEmpty(singleLine[20]),
+          street: isEmpty(singleLine[24]),
+          city: isEmpty(singleLine[28]),
+          region: isEmpty(singleLine[29]),
+          postalCode: isEmpty(singleLine[30])
+        }
+        if (c.firstName) {
+          console.log(`valid contact: ${JSON.stringify(c)} was found, uploading`)
+          contacts.push(c)
+          amount++
+        }
+      }
+      const token = localStorage.getItem('token')
+      const promise = fetch('/api/addContact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          email: localStorage.getItem('email'),
+          contacts: JSON.stringify(contacts)
+        })
+      })
+      promise.then(async (res: Response) => {
+        if (res.status === 201) {
+          return await res.json()
+        } else if (res.status === 401) {
+          alert('Authorization failed.')
+          return undefined
+        } else if (res.status === 403) {
+          alert(`Bad word: ${await res.json().then((js) => js.message)}`)
+        } else {
+          return undefined
+        }
+      }).then((res) => {
+        // redirect to user home page
+        if (!res) {
+          alert('Contacts could not be added, check further logs')
+          console.log(`status: ${res.status}, message: ${res.message}`)
+        }
+        void router.push('/')
+      }).catch((error: Error) => {
+        console.log(error)
+      })
+      alert(`added ${amount} contacts`)
+    }
+  }
+
+  function getImportedContacts (event: FormEvent) {
+    const value = event.target as HTMLInputElement
+    if (value.files) {
+      console.log('importing contacts')
+      console.log(value.files[0])
+      const reader = new FileReader()
+      reader.onload = event => { if (event.target) readAndUploadCSV(event.target.result?.toString()) }
+      reader.onerror = error => { console.log(error) }
+      reader.readAsText(value.files[0]) // you could also read images and other binaries
     }
   }
 
@@ -330,53 +443,52 @@ export default function UserInfo () {
       <div className="w-4/5 mx-auto">
         <form>
           <div className="space-y-12">
-            <div className="border-b dark:border-zinc-300  border-gray-900/10 pb-12">
+
+            <div className="pt-6 pb-5 border-b dark:border-zinc-300  border-gray-900/10">
               <h2 className="text-2xl font-semibold leading-7 dark:text-white">
-                Update Personal Information
+                Settings
               </h2>
               <p className="mt-1 text-lg leading-6 text-gray-600 dark:text-zinc-300">
-                Change your profile info
+                Update your profile and account
               </p>
-
-              <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div className="col-span-full">
-                  <div className="block text-sm font-medium leading-6 dark:text-white">
-                    Photo
-                  </div>
-                  <div className="mt-2 flex items-center gap-x-3">
-                    <Image
-                      src={
-                        photoChanged
-                          ? imageFile
-                            ? URL.createObjectURL(imageFile)
-                            : contact?.photo
-                              ? contact?.photo
-                              : pfp
-                          : contact?.photo
-                            ? contact?.photo
-                            : pfp
-                      }
-                      width="48"
-                      height="48"
-                      alt="upload profile picture preview"
-                      className="rounded-full object-cover w-12 h-12"
-                    />
-                    <label
-                      htmlFor="file-upload"
-                      className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-gray-900"
-                    >
-                      Change
-                    </label>
-                    <input
-                      id="file-upload"
-                      name="file-upload"
-                      type="file"
-                      className="sr-only"
-                      onChange={handleFileChange}
-                    />
-                  </div>
+            </div>
+            <div className="border-b dark:border-zinc-300 border-gray-900/10 pb-12">
+              <div className="col-span-full">
+                <div className="text-base font-semibold leading-7 dark:text-white">
+                  Photo
+                </div>
+                <div className="mt-2 flex items-center gap-x-3">
+                  <Image
+                    src={photoChanged ? imageFile ? URL.createObjectURL(imageFile) : contact.photo ? contact.photo : pfp : contact.photo ? contact.photo : pfp }
+                    width="48"
+                    height="48"
+                    alt="upload profile picture preview"
+                    className = "rounded-full object-cover w-12 h-12"
+                  />
+                  <label
+                    htmlFor="file-upload"
+                    className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                  >
+                    Change
+                  </label>
+                  <input
+                    id="file-upload"
+                    name="file-upload"
+                    type="file"
+                    className="sr-only"
+                    onChange={handleFileChange}
+                  />
                 </div>
               </div>
+            </div>
+
+            <div className="border-b dark:border-zinc-300 border-gray-900/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 dark:text-white">
+                School Information
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-zinc-300">
+                Fill out school information including college and major.
+              </p>
 
               <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div className="sm:col-span-4">
@@ -693,26 +805,77 @@ export default function UserInfo () {
               </div>
             </div>
 
-            <div className="flex items-center mb-4 border-b dark:border-zinc-300  border-gray-900/10 pb-12">
-              <input
-                id="check-important"
-                name="check-important"
-                type="checkbox"
-                className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                value={
-                  contact?.important ? contact?.important.toString() : 'false'
-                }
-                checked={contact?.important ? contact?.important : false}
-                onChange={handleChange}
-              />
-              <label
-                htmlFor="check-important"
-                className="w-full py-4 ms-2 text-base font-medium"
-              >
-                Public Profile
-              </label>
-            </div>
+            <div className="border-b dark:border-zinc-300 border-gray-900/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 dark:text-white">
+                Privacy Settings
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-zinc-300">
+              Set your profile to public or private.
+              </p>
 
+              <div className="mt-5 flex items-center">
+                <input
+                  id="check-important"
+                  name="check-important"
+                  type="checkbox"
+                  className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  value={
+                    contact?.important ? contact?.important.toString() : 'false'
+                  }
+                  checked={contact?.important ? contact?.important : false}
+                  onChange={handleChange}
+                />
+                <label
+                  htmlFor="check-important"
+                  className="w-full py-4 ms-2 text-base font-medium"
+                >
+                  Public Profile
+                </label>
+              </div>
+            </div>
+            <div className = "border-b dark:border-zinc-300 border-gray-900/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 dark:text-white">
+                Delete All Contacts
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-zinc-300">
+                  Warning! This action is irreversible!
+              </p>
+              <div className="col-span-full">
+                  <div className="mt-2 flex items-center gap-x-3">
+                    <label
+                      className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-gray-900"
+                      onClick={deleteAllContacts}
+                    >
+                      Delete All Contacts!
+                    </label>
+                  </div>
+                </div>
+            </div>
+            <div className = "border-b dark:border-zinc-300 border-gray-900/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 dark:text-white">
+                Batch Add
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-zinc-300">
+                  Import a csv file to add multiple contacts at once.
+              </p>
+              <div className="col-span-full">
+                  <div className="mt-5 flex items-center gap-x-3">
+                    <label
+                      htmlFor="importfile-upload"
+                      className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-gray-900"
+                    >
+                      Import File
+                    </label>
+                    <input
+                      id="importfile-upload"
+                      name="importfile-upload"
+                      type="file"
+                      className="sr-only"
+                      onChange={getImportedContacts}
+                    />
+                  </div>
+                </div>
+            </div>
             <div className="border-b dark:border-zinc-300  border-gray-900/10 pb-12">
               <div className="mt-6 flex items-center justify-end gap-x-6">
                 <Link href="/">
