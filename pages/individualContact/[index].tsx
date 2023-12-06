@@ -72,6 +72,12 @@ const DynamicContactPage = () => {
 			</main>
     )
   }
+
+  function copyDiscord () {
+    if (userData?.discord) {
+      void navigator.clipboard.writeText(userData?.discord)
+    }
+  }
   return (
 		<>
 			<main className="min-h-screen px-10">
@@ -112,26 +118,85 @@ const DynamicContactPage = () => {
 							<p className="flex text-2xl font-bold mb-4">Information</p>
 							<div className="flex justify-between dark:text-zinc-300 text-lg">
 								<ul className="ml-6 list-disc list-outside">
-									<li className="mb-2">Email: {userData?.email}</li>
+									<li className="mb-2">Email: {
+										(
+										  (userData?.email !== null)
+										        ? (<a target="_blank" rel="noopener noreferrer" href={'mailto:' + userData?.email as (string | undefined)}>
+														{userData?.email}
+													</a>)
+										    : ''
+										)
+									}</li>
 									<li className="mb-2">Phone: {userData?.phoneNumber}</li>
-									<li className="mb-2">Instagram: {userData?.instagram}</li>
+									<li className="mb-2">Instagram: {
+										(
+											(userData?.instagram !== null)
+											  ? (<a target="_blank" rel="noopener noreferrer" href={'https://instagram.com/' + userData?.instagram }>
+															{userData?.instagram}
+														</a>)
+											  : userData?.instagram
+											)
+									}
+
+									</li>
 									<li className="mb-2">Snapchat: {userData?.snapchat}</li>
-									<li className="mb-2">Discord: {userData?.discord}</li>
+									<li className="mb-2" onClick={copyDiscord}>Discord:
+										{' ' + userData?.discord}
+									</li>
 									<li className="mb-2">LinkedIn: {userData?.linkedin}</li>
-									<li className="mb-2">Github: {userData?.github}</li>
+									<li className="mb-2">Github: {
+									(
+										  (userData?.github !== null)
+										        ? (<a target="_blank" rel="noopener noreferrer" href={'https://github.com/' + userData?.github?.replaceAll(' ', '+')}>
+														{userData?.github}
+													</a>)
+										    : (
+										        userData?.github
+										      )
+										)}</li>
 									<li className="mb-2">Facebook: {userData?.facebook}</li>
 									<li className="mb-2">Twitter: {userData?.twitter}</li>
 								</ul>
 								<ul className="list-disc list-outside">
 									<li className="mb-2">Birthday: {userData?.birthday}</li>
-									<li className="mb-2">City: {userData?.city}</li>
+									<li className="mb-2">City: {
+									(
+										(userData?.city !== null)
+										  ? (<a target="_blank" rel="noopener noreferrer" href={'https://www.google.com/maps/search/?api=1&query=' + userData?.city?.replaceAll(' ', '+')}>
+												{userData?.city}
+											</a>)
+										  : (
+										      userData?.city
+										    )
+										)
+									}</li>
 									<li className="mb-2">College: {userData?.college}</li>
 									<li className="mb-2">Major: {userData?.major}</li>
 									<li className="mb-2">Country: {userData?.country}</li>
-									<li className="mb-2">Street: {userData?.street}</li>
+									<li className="mb-2">Street: {
+										(
+										  (userData?.street !== null)
+										        ? (<a target="_blank" rel="noopener noreferrer" href={'https://www.google.com/maps/search/?api=1&query=' + userData?.street?.replaceAll(' ', '+')}>
+														{userData?.street}
+													</a>)
+										    : (
+										        userData?.street
+										      )
+										)
+									}</li>
 									<li className="mb-2">Postal Code: {userData?.postalCode}</li>
 									<li className="mb-2">State/Region: {userData?.region}</li>
-									<li className="mb-2">Spotify: {userData?.spotify}</li>
+									<li className="mb-2">Spotify: {
+										(
+										  (userData?.spotify !== null && userData?.spotify?.includes('open.spotify'))
+										        ? (<a target="_blank" rel="noopener noreferrer" href={userData?.spotify as (string | undefined)}>
+														Click here to find on Spotify!
+													</a>)
+										    : (
+										        (<a target="_blank" rel="noopener noreferrer" href={'https://open.spotify.com/user/' + userData?.spotify as (string | undefined)}> {userData?.spotify} </a>)
+										      )
+										)
+									}</li>
 								</ul>
 							</div>
 						</section>{' '}
