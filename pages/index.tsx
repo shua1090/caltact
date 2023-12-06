@@ -96,13 +96,13 @@ export default function Index () {
             />
           </span>
           <button
-            className="bg-blue-500 text-white rounded-md p-2"
+            className="bg-indigo-700 text-white rounded-md p-2"
             onClick={fetchNewContacts}
           >
             Search
           </button>
         </div>
-        <div className="contacts gap-4 mt-10">
+        <div className="contacts gap-4 mt-10 z-0">
           {!isLoading && contacts && contacts.length > 0
             ? contacts.map((contact, i) => (
                 <div key={i}>
