@@ -158,7 +158,7 @@ export default function UserInfo () {
           }
           updateUser(contactToAdd, indexNum)
             .then(async (res: Response) => {
-              if (res.status === 201) {
+              if (res.status === 400) {
                 return await res.json()
               } else if (res.status === 401) {
                 alert('Authorization failed.')
@@ -194,6 +194,7 @@ export default function UserInfo () {
         .then(async (res: Response) => {
           console.log(`Returned result with status: ${res.status}`)
           if (res.status === 400) {
+            console.log(res.json())
             return await res.json()
           } else if (res.status === 401) {
             alert('Authorization failed.')
