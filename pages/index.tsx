@@ -27,6 +27,8 @@ async function fetchContacts (
   })
   try {
     if (response.status !== 200) {
+      alert("Couldn't authenticate (maybe you switched devices?)! Sign back in!")
+      localStorage.setItem('token', '')
       window.location.href = '/signin'
       return
     }
@@ -35,6 +37,8 @@ async function fetchContacts (
     setIsLoading(false)
   } catch (e) {
     // Redirect user to login page
+    alert('Invalid token! Log back in!')
+    localStorage.setItem('token', '')
     window.location.href = '/signin'
   }
 }
