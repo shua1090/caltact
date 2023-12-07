@@ -42,7 +42,7 @@ export default async function handler (
         }
         if (req.body.search) {
           contacts = contacts.filter(
-            (c: { firstName: string, lastName: string }) => (c.firstName.toLowerCase() + ' ' + c.lastName.toLowerCase()).includes(req.body.search.toLowerCase())
+            (c: { firstName: string, lastName: string }) => (c.firstName?.toLowerCase() + ' ' + c.lastName?.toLowerCase()).includes(req.body.search.toLowerCase())
           )
         }
         res.status(200).json({ contacts })
